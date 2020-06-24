@@ -29,10 +29,12 @@ File extensions:
 ******    
    
 <p align="center">  
-  <img src="https://miro.medium.com/max/1000/0*qFTabwOQbqE_sqhD.gif">   
-  <b>Try not. Do or do not. There is no try.</b><br>     
-  <b> – Jedi Master Yoda</b>  
   <br><br>  
+  <img src="https://miro.medium.com/max/1000/0*qFTabwOQbqE_sqhD.gif">     
+  <br><br>  
+  <b>Try not. Do or do not. There is no try.</b>
+  <br>     
+  <b> – Jedi Master Yoda</b>  
 </p>  
     
 ## Abstract        
