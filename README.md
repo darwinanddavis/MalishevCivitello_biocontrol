@@ -29,9 +29,9 @@ File extensions:
 ******    
   
 <center>    
-	<p style="color: #FF7E7E; font-size:175%">  
-		<b>Try not. Do or do not. There is no try.</b><sup>[2](https://www.youtube.com/watch?v=BQ4yd2W50No)</sup>     
-		<b>–-- Jedi Master Yoda</b>               
+	<p style="font-size:175%">  
+		<b>Try not. Do or do not. There is no try.</b>  
+		<b> – Jedi Master Yoda</b>               
 	</p>  
 </center>    
   
