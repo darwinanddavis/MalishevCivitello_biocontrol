@@ -1,6 +1,4 @@
-<!-- <img src="https://raw.githubusercontent.com/darwinanddavis/MalishevCivitello_biocontrol/master/header.jpg" alt=" " width=1000 height=500>    -->  
-  
-  <img src="https://miro.medium.com/max/1000/0*qFTabwOQbqE_sqhD.gif">  
+<!-- <img src="https://raw.githubusercontent.com/darwinanddavis/MalishevCivitello_biocontrol/master/header.jpg" alt=" " width=1000 height=500>    -->   
   
 <!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3823824.svg)](https://zenodo.org/record/3823824#.XrubRBMzYWo)   -->
 
@@ -31,6 +29,7 @@ File extensions:
 ******    
    
 <p align="center">  
+  <img src="https://miro.medium.com/max/1000/0*qFTabwOQbqE_sqhD.gif">   
   <b>Try not. Do or do not. There is no try.</b><br>     
   <b> – Jedi Master Yoda</b>  
   <br><br>  
