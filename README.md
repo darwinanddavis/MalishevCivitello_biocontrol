@@ -26,9 +26,16 @@ File extensions:
 .pdf  
 .html    
 
-******  
-
-## Abstract      
+******    
+  
+<center>    
+	<p style="color: #FF7E7E; font-size:175%">  
+		<b>Try not. Do or do not. There is no try.</b><sup>[2](https://www.youtube.com/watch?v=BQ4yd2W50No)</sup>     
+		<b>–-- Jedi Master Yoda</b>               
+	</p>  
+</center>    
+  
+## Abstract        
   
 Conventional wisdom suggests any effort to control pests and parasites is better than none. However, growing evidence demonstrates weak or moderate effort can backfire, fail, and potentially worsen outcomes versus doing nothing. A central challenge is anticipating these potential failures before inducing environmental damage. We built a resource-explicit individual-based model of human schistosome and snail host transmission to evaluate biocontrol effort by simulating 19 predator stocking densities of native prawns. We test two host mortality scenarios and show intense biocontrol effort can succeed. However, weak to moderate effort can backfire by allowing large, prolific hosts to escape predation and drive overcompensation due to three interacting ecological mechanisms—resource competition among hosts, resource-dependent infectiousness, and predator gape limits. Ultimately, integrating physiology, ecology, and epidemiology can identify the risks of weak or moderate control effort when evaluating potential ‘do or do not’ control designs for future management of wildlife pests and diseases.      
 
