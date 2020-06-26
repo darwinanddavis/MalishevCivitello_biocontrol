@@ -324,7 +324,6 @@ traceplot &lt;-<span class="st"> </span><span class="dv">0</span> <span class="c
 rn &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># reset reps</span>
 
 <span class="co"># set dir paths (for &quot;/&quot; for both Windows and Mac)</span>
-<span class="co"># set dir paths (for &quot;/&quot; for both Windows and Mac)</span>
 wd &lt;-<span class="st"> &quot;&lt;set working dir&gt;&quot;</span> <span class="co"># set working directory  </span>
 ver_nl &lt;-<span class="st">&quot;6.0.4&quot;</span><span class="co"># type in Netlogo version. found in local dir. </span>
 ver_gcc &lt;-<span class="st">&quot;4.6.3&quot;</span> <span class="co"># type in gcc version (if known). leave as &quot;NULL&quot; if unknown   </span>
@@ -354,8 +353,6 @@ model.path &lt;-<span class="st"> </span><span class="kw">paste0</span>(wd,<span
 ####################################  load packages #######################################
 <span class="co"># new installation method (11-9-19)</span>
 
-<span class="co"># try pacman method again without concurrent r session running (15-10-19)</span>
-
 <span class="kw">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)
 <span class="kw">require</span>(pacman)
 packages &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Matrix&quot;</span>,<span class="st">&quot;deSolve&quot;</span>,<span class="st">&quot;mvtnorm&quot;</span>,<span class="st">&quot;LaplacesDemon&quot;</span>,<span class="st">&quot;coda&quot;</span>,<span class="st">&quot;adaptMCMC&quot;</span>,<span class="st">&quot;sp&quot;</span>,<span class="st">&quot;RNetLogo&quot;</span>,<span class="st">&quot;ggplot2&quot;</span>,<span class="st">&quot;RCurl&quot;</span>,<span class="st">&quot;RColorBrewer&quot;</span>,<span class="st">&quot;Interpol.T&quot;</span>,<span class="st">&quot;lubridate&quot;</span>,<span class="st">&quot;ggExtra&quot;</span>,<span class="st">&quot;tidyr&quot;</span>,<span class="st">&quot;ggthemes&quot;</span>,<span class="st">&quot;reshape2&quot;</span>,<span class="st">&quot;pse&quot;</span>,<span class="st">&quot;sensitivity&quot;</span>,<span class="st">&quot;beepr&quot;</span>)  
@@ -370,7 +367,17 @@ pacman<span class="op">::</span><span class="kw">p_load</span>(Matrix,deSolve,mv
 ppp &lt;-<span class="st"> </span><span class="kw">lapply</span>(packages,require,<span class="dt">character.only=</span>T)
 <span class="kw">names</span>(ppp) &lt;-<span class="st"> </span>packages
 <span class="cf">if</span>(<span class="kw">any</span>(ppp<span class="op">==</span>F)){<span class="kw">cbind</span>(packages,ppp);<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n\n\n</span><span class="st"> ---&gt; Check packages are loaded properly &lt;--- </span><span class="ch">\n\n\n</span><span class="st">&quot;</span>)}
+
 cs &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># diagnostics list for checking NAs in create snails command  </span>
+
+<span class="co"># load plot function </span>
+script &lt;-<span class="st"> </span><span class="kw">getURL</span>(<span class="st">&quot;https://raw.githubusercontent.com/darwinanddavis/plot_it/master/plot_it.R&quot;</span>, <span class="dt">ssl.verifypeer =</span> <span class="ot">FALSE</span>)
+<span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text =</span> script))
+<span class="kw">display.brewer.all</span>()
+<span class="co"># Set global plotting parameters</span>
+<span class="kw">cat</span>(<span class="st">&quot;plot_it( </span><span class="ch">\n</span><span class="st">0 for presentation, 1 for manuscript, </span><span class="ch">\n</span><span class="st">set colour for background, </span><span class="ch">\n</span><span class="st">set colour palette 1. use 'display.brewer.all()', </span><span class="ch">\n</span><span class="st">set colour palette 2. use 'display.brewer.all()', </span><span class="ch">\n</span><span class="st">set alpha for colour transperancy, </span><span class="ch">\n</span><span class="st">set font style </span><span class="ch">\n</span><span class="st">)&quot;</span>)
+<span class="kw">plot_it</span>(<span class="dv">1</span>,<span class="st">&quot;black&quot;</span>,<span class="st">&quot;YlOrRd&quot;</span>,<span class="st">&quot;Greens&quot;</span>,<span class="dv">1</span>,<span class="st">&quot;mono&quot;</span>) <span class="co"># set plot function params       </span>
+<span class="kw">plot_it_gg</span>(<span class="st">&quot;white&quot;</span>,<span class="st">&quot;black&quot;</span>) <span class="co"># specify background and foreground colours for ggplot     </span>
 
 ################################  compile packages and load files ###################################
 
@@ -456,7 +463,7 @@ pars[<span class="st">&quot;Fh&quot;</span>] =<span class="st"> </span><span cla
 pars[<span class="st">&quot;ENV&quot;</span>] =<span class="st"> </span><span class="dv">500</span> <span class="co"># Units: L</span>
 pars[<span class="st">&quot;r&quot;</span>] =<span class="st"> </span><span class="dv">1</span>   <span class="co"># Units: day-1</span>
 pars[<span class="st">&quot;step&quot;</span>] =<span class="st"> </span><span class="dv">1</span>  <span class="co"># Units: day</span>
-pars[<span class="st">&quot;epsilon&quot;</span>] =<span class="st"> </span><span class="dv">20</span> <span class="co"># Units: L host-1, day-1 </span>
+pars[<span class="st">&quot;epsilon&quot;</span>] =<span class="st"> </span><span class="dv">20</span> <span class="co"># Units: L host-1, day-1 (Rounded estimate from Civitello and Rohr)</span>
 pars[<span class="st">&quot;sigma&quot;</span>] =<span class="st"> </span><span class="fl">0.5</span> 
 pars[<span class="st">&quot;m_M&quot;</span>] =<span class="st"> </span><span class="dv">1</span>   <span class="co"># Units: day-1</span>
 pars[<span class="st">&quot;m_Z&quot;</span>] =<span class="st"> </span><span class="dv">1</span>   <span class="co"># Units: day-1</span>
@@ -464,7 +471,6 @@ pars[<span class="st">&quot;M_in&quot;</span>] =<span class="st"> </span><span c
 pars[<span class="st">&quot;K&quot;</span>] =<span class="st"> </span><span class="dv">5</span>
 pars[<span class="st">&quot;Det&quot;</span>] =<span class="st"> </span><span class="fl">0.1</span> <span class="co"># Units mg C/L-1 d-1 (detritus) </span>
 pars[<span class="st">&quot;yRP&quot;</span>] =<span class="st"> </span>pars[<span class="st">&quot;yRP&quot;</span>]<span class="op">*</span><span class="fl">17.5</span> <span class="co"># new yRP = 0.824 * 17.5 (1-8-19)( # old yRP = 0.0471 * (1/0.4) * 7 [expected shedding output per week * (snails shed 40% of their total cercariae during 9-11 AM.) * 7 days] </span>
-
 
 ####################################  solve deb eqs #######################################
 <span class="co"># display list of param definitions</span>
@@ -540,7 +546,6 @@ update.snails =<span class="st"> </span><span class="cf">function</span>(who, ne
 
 <span class="kw">geterrmessage</span>() <span class="co"># check if there were any error messages  </span>
 
-
 ###########################################################################################
 ####################################  load netlogo ######################################## 
 ###########################################################################################
@@ -560,23 +565,80 @@ update.snails =<span class="st"> </span><span class="cf">function</span>(who, ne
 ####################################  start netlogo sim ######################################## 
 ################################################################################################
 
-<span class="co"># run model from here --------------------------------------------------------------</span>
 
-resource_type =<span class="st"> &quot;algae&quot;</span>
+<span class="co"># user input (26-6-20) -------------------------------------------------------------</span>
+
+<span class="co"># discrete host mortality</span>
+<span class="co"># biocontrol = 1 # run biocontrol?</span>
+<span class="co"># snail_snack_window = 1 # 1 = run biocontrol for sliding window of snail size classes, 0 = exp predation rate </span>
+<span class="co"># productivity &lt;- 0 # 1 = run biocontrol with varying productivity levels (rg and detr)</span>
+<span class="co"># no_control &lt;- 0 # run normal no control sims</span>
+<span class="co"># choose either algae (rg_pars) or detritus (detr_pars)   </span>
+<span class="co"># rg_pars &lt;- 0.25</span>
+<span class="co"># detr_pars &lt;- 0</span>
+<span class="co"># snail_snack_min_vec &lt;- c(0) # min size host to eat</span>
+<span class="co"># snail_snack_max_vec &lt;- c(0,5,10,15,25,50) # max size host to eat</span>
+
+<span class="co"># continuous host mortality</span>
+<span class="co"># biocontrol = 1 # run biocontrol?</span>
+<span class="co"># snail_snack_window = 0 # 1 = run biocontrol for sliding window of snail size classes, 0 = exp predation rate </span>
+<span class="co"># productivity &lt;- 1 # 1 = run biocontrol with varying productivity levels (rg and detr)</span>
+<span class="co"># no_control &lt;- 0 # run normal no control sims</span>
+<span class="co"># choose either algae (rg_pars) or detritus (detr_pars)  </span>
+<span class="co"># rg_pars &lt;- c(0,0.01,0.05,0.1,0.2,0.25) # resource growth rates (r)</span>
+<span class="co"># detr_pars &lt;- c(0,0.01,0.05,0.1,0.2,0.25) # detritus input (mg L^-1 day^-1)</span>
+<span class="co"># snail_snack_min_vec &lt;- 0 # min size host to eat</span>
+<span class="co"># snail_snack_max_vec &lt;- 0 # max size host to eat</span>
+
+<span class="co"># pred_ps sims on drive 26-6-20</span>
+pred_ps_total &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.01</span>,<span class="fl">0.05</span>,<span class="kw">seq</span>(<span class="fl">0.1</span>,<span class="fl">1.5</span>,<span class="fl">0.1</span>),<span class="dv">2</span>,<span class="fl">2.5</span>,<span class="dv">3</span>,<span class="fl">3.5</span>,<span class="dv">4</span>,<span class="fl">4.5</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>)
+
+<span class="co"># pred density param for sims</span>
+<span class="co"># discrete host mortality </span>
+pred_ps &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="fl">1.5</span>,<span class="fl">0.1</span>),<span class="dv">2</span>)  <span class="co"># fig 1&amp;2</span>
+pred_ps &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="fl">1.5</span>,<span class="fl">0.1</span>),<span class="dv">2</span>,<span class="fl">2.5</span>,<span class="dv">3</span>) <span class="co"># fig 3</span>
+<span class="co"># continuous host mortality with varying resource productivity   </span>
+pred_ps &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.05</span>), <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>) <span class="co"># fig 4 </span>
+
+<span class="co"># per m^2</span>
+<span class="co"># discrete host mortality </span>
+<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="fl">1.5</span>,<span class="fl">0.1</span>),<span class="dv">2</span>) <span class="op">/</span><span class="st"> </span><span class="dv">50</span> <span class="op">*</span><span class="st"> </span><span class="dv">500</span> <span class="co"># fig 1&amp;2</span>
+<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="fl">1.5</span>,<span class="fl">0.1</span>),<span class="dv">2</span>,<span class="fl">2.5</span>,<span class="dv">3</span>) <span class="op">/</span><span class="st"> </span><span class="dv">50</span> <span class="op">*</span><span class="st"> </span><span class="dv">500</span> <span class="co"># fig 3</span>
+<span class="co"># continuous host mortality with varying resource productivity   </span>
+<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">50</span>) 
+
+<span class="co"># additional params for fig 4  </span>
+<span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="dv">5</span>) <span class="op">/</span><span class="st"> </span><span class="dv">50</span> <span class="op">*</span><span class="st"> </span><span class="dv">500</span>
+ 
+<span class="co"># per L</span>
+pred_ps <span class="op">/</span><span class="st"> </span><span class="dv">50</span> 
+<span class="co"># per m^2</span>
+pred_ps <span class="op">/</span><span class="st"> </span><span class="dv">50</span> <span class="op">*</span><span class="st"> </span><span class="dv">500</span>
+
+<span class="co"># run model -------------------------------------------------------------------------</span>
+
+resource_type=<span class="st">&quot;algae&quot;</span> <span class="co"># detritus # set resource type</span>
+<span class="co"># these can both be &gt; 0 (both are toggled on/off in sim code)</span>
 <span class="co"># algae params</span>
-rg_pars &lt;-<span class="st"> </span><span class="fl">0.5</span> <span class="co"># resource growth rates (rs)</span>
+<span class="co"># rg_pars &lt;- c(0,0.01,0.05,0.1,0.2,0.25) # resource growth rates (r)</span>
+rg_pars &lt;-<span class="st"> </span><span class="fl">0.25</span>
 <span class="co"># detritus params</span>
-detr_pars &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># detritus input (mg L^-1 day^-1)</span>
+<span class="co"># detr_pars &lt;- c(0,0.01,0.05,0.1,0.2,0.25) # detritus input (mg L^-1 day^-1)</span>
+<span class="co"># detr_pars &lt;- 0.25</span>
+<span class="co"># mortality params </span>
+hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span>
 
-snail_control &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># run molluscicide sims?</span>
-hailmary &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># run hailmary sims separately to other molluscicide sims. NB: activate all @hailmary lines in code</span>
+snail_control &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># run molluscicide sims?</span>
+hailmary &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># run hailmary sims separately to other molluscicide sims</span>
 detr_impact =<span class="st"> </span><span class="dv">0</span> <span class="co"># run detritus impact?</span>
-biocontrol =<span class="st"> </span><span class="dv">0</span> <span class="co"># run biocontrol?</span>
+biocontrol =<span class="st"> </span><span class="dv">1</span> <span class="co"># run biocontrol?</span>
+snail_snack_window =<span class="st"> </span><span class="dv">1</span> <span class="co"># 1 = run biocontrol for sliding window of snail size classes, 0 = exp predation rate </span>
+productivity &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># 1 = run biocontrol with varying productivity levels (rg and detr)</span>
 no_control &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># run normal no control sims</span>
 
 <span class="co"># snail control</span>
-me_event &lt;-<span class="st"> </span><span class="dv">151</span> <span class="co"># 1 = on day 30, every month, skip a month, etc. 8 = hailmary</span>
-me_im_event &lt;-<span class="st"> </span><span class="dv">4</span> <span class="co"># 1 = 0.69, 2 = 1.39, 3 = 2.30, 4 = 3.0, 5 = 4.60 for me_im</span>
+me_events &lt;-<span class="st"> </span>n.ticks<span class="op">+</span><span class="dv">1</span> <span class="co"># 1 = on day 30, every month, skip a month. 8 = hailmary</span>
+me_im_events &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># 1 = 0.69, 2 = 1.39, 3 = 2.30, 4 = 3.0, 5 = 4.60 for me_im</span>
 me_im &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># create me_im vec</span>
 
 <span class="co"># detritus control</span>
@@ -584,461 +646,512 @@ detr_im &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl"
 detr_impact_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">15</span>,<span class="dv">30</span>,<span class="dv">60</span>) <span class="co"># days for each detritus impact sim </span>
 
 <span class="co"># biocontrol</span>
-be_event &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># 1 2 3 select biocontrol event (diff snail snack size)</span>
 init_host_pop =<span class="st"> </span><span class="dv">50</span> <span class="co"># initial population size</span>
-init_host_pop_vec &lt;-<span class="st"> </span><span class="dv">50</span> <span class="co"># c(50,100,200,500,1000)</span>
+init_host_pop_vec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">50</span>)
 <span class="co"># functional pred feeding response: fN = aNP / 1 + ahN</span>
-pred_a &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># predator attack rate (from sokolow etal 2014 acta tropica)</span>
+pred_a &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># predator attack rate: 50L sweeped / day or 8.33 * 6 L tanks (from sokolow etal 2014 acta tropica)</span>
 pred_h &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># pred handling time # 0.1 = 10 snails per day</span>
-pred_p &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># predator population density</span>
+<span class="co"># pred_p &lt;- 0.05  # predator population density</span>
+<span class="co"># pred_ps &lt;- c(seq(0.1,1.5,0.1),2,2.5,3)</span>
+pred_ps &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">50</span>,<span class="dv">100</span>)
+fh_buff =<span class="st"> </span><span class="dv">10</span> <span class="co"># buffer to convert pred_ps digits into integer for saving file handle</span>
 
-<span class="co"># mortality params </span>
-hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span> <span class="co">#c(0.001, 0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.1); hb_pars</span>
+rep_num &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># number of replications</span>
 
-rep_num &lt;-<span class="st"> </span><span class="dv">5</span> <span class="co"># number of reps</span>
+<span class="co"># for @productivity == 1 # plus need to comment out rg and detr in next loop    </span>
+<span class="co"># for(rg in rg_pars){ # loop through rgs (food growth rates)</span>
+<span class="co"># for(detr in detr_pars){ # loop through det (food growth rates)</span>
 
-<span class="cf">if</span>(hailmary<span class="op">==</span><span class="dv">1</span>){me_pars &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">140</span>,<span class="dv">10</span>); me_event &lt;-<span class="st"> </span><span class="dv">8</span>}<span class="cf">else</span>{me_pars &lt;-<span class="st"> </span>n.ticks <span class="op">+</span><span class="st"> </span><span class="dv">1</span>} <span class="co"># set hailmary file handle</span>
-<span class="co">#  save multiple sims to dir ---------------------------------------</span>
-<span class="cf">for</span>(rn <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>rep_num){
-  <span class="cf">for</span>(me_im_event <span class="cf">in</span> me_im_event){ <span class="co"># 1:5 # me impact (0.69, 1.39, 2.3 ...)</span>
-    <span class="cf">for</span>(me_event <span class="cf">in</span> me_event){ <span class="co"># 1:7 # run all me event scenarios and save to file.</span>
-    <span class="co"># for(me_event in 8){ # @hailmary</span>
-      
-      <span class="co"># for hailmary, uncomment below and comment out me_pars loop below @hailmary</span>
-      <span class="co"># for(me in me_pars){ # loop through mes (molluscicide events) for saving one me event per sim to dir (hailmary)</span>
-        
-        resources=<span class="st">&quot;event&quot;</span> <span class="co"># set resource cycles</span>
-        sicb_sims =<span class="st"> </span><span class="dv">0</span> <span class="co"># run sicb sims? # 2-5-19</span>
-        fig2 &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># run fig 2 in sicb? 0 = fig 3</span>
-        
-        alpha_pars =<span class="st"> </span><span class="dv">0</span>
-        rho_pars =<span class="st"> </span><span class="dv">1</span>
-        
-        <span class="co"># set type of resource input @netlogo</span>
-        set_resource_type&lt;-<span class="cf">function</span>(resource_type){ <span class="co"># set resource input in env  </span>
-          <span class="cf">if</span>(resource_type <span class="op">==</span><span class="st"> &quot;detritus&quot;</span>){<span class="kw">NLCommand</span>(<span class="st">&quot;set resource_type </span><span class="ch">\&quot;</span><span class="st">detritus</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}<span class="cf">else</span>{<span class="kw">NLCommand</span>(<span class="st">&quot;set resource_type </span><span class="ch">\&quot;</span><span class="st">algae</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}}
-        <span class="kw">set_resource_type</span>(resource_type) <span class="co"># set resource type: &quot;detritus&quot; or &quot;algae&quot;  @netlogo</span>
-        
-        <span class="co"># set type of resource dynamics @netlogo</span>
-        set_resources&lt;-<span class="cf">function</span>(resources){ <span class="co"># set resource input in env  </span>
-          <span class="cf">if</span> (resources <span class="op">==</span><span class="st"> &quot;cyclical&quot;</span>){<span class="kw">NLCommand</span>(<span class="st">&quot;set resources </span><span class="ch">\&quot;</span><span class="st">cyclical</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}<span class="cf">else</span>{<span class="kw">NLCommand</span>(<span class="st">&quot;set resources </span><span class="ch">\&quot;</span><span class="st">event</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}}
-        <span class="kw">set_resources</span>(resources) <span class="co"># set resources: &quot;cyclical&quot; or &quot;event&quot;  @netlogo</span>
-        <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Resource type = &quot;</span>,resource_type,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Resources = &quot;</span>,resources)
-        
-        <span class="co"># set initial pop size @netlogo</span>
-        <span class="kw">NLCommand</span>(<span class="st">&quot;set init_host_pop&quot;</span>, init_host_pop)
-        
-        <span class="cf">if</span>(save_to_file<span class="op">==</span><span class="dv">1</span>){<span class="kw">pdf</span>(<span class="kw">paste0</span>(wd,<span class="st">&quot;/master_sim.pdf&quot;</span>),<span class="dt">onefile=</span>T,<span class="dt">paper=</span><span class="st">&quot;a4&quot;</span>)}
-        
-        Env_G =<span class="st"> </span><span class="kw">numeric</span>() <span class="co"># create empty environment vector </span>
-        day &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># reset sim days </span>
-        
-        <span class="co"># individual outputs</span>
-        cerc_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># cercariae   </span>
-        food_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># food in env </span>
-        juv_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># juvenile hosts</span>
-        adult_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># adult hosts </span>
-        infec_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># infected hosts</span>
-        infec_shed_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># infected shedding hosts</span>
-        hl_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># host length</span>
-        pmass_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># parasite biomass </span>
-        host_biomass_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># host biomass list </span>
-        egg_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># egg density in env</span>
-        egg_mean_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># mean host eggs list</span>
-        infec_shed_length_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># length of infected shedding hosts</span>
-        
-        <span class="co"># master outputs</span>
-        cerc_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for cerc density (Env_Z) </span>
-        food_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for food dynamics (Env_F) </span>
-        juv_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for total host pop () </span>
-        adult_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for total host pop () </span>
-        infec_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for infected host pop () </span>
-        infec_shed_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for infected shedding host pop</span>
-        hl_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for host length</span>
-        pmass_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for parasite biomass </span>
-        host_biomass_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for host biomass</span>
-        egg_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for egg density in env</span>
-        egg_mean_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for mean host eggs </span>
-        infec_shed_length_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for length of infected shedding hosts</span>
-        
-        <span class="co"># define plot window</span>
-        plot.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="kw">length</span>(rg_pars),<span class="kw">length</span>(detr_pars)))
-        <span class="kw">par</span>(<span class="dt">mfrow=</span>plot.matrix)
-        
-        <span class="co"># ~~~~~~ snail control -----------------------------------------------------------</span>
-        
-        <span class="cf">if</span>(snail_control <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){
-          
-          me_im_pars &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="fl">0.69</span>, <span class="fl">1.39</span>, <span class="fl">2.3</span>, <span class="dv">3</span>, <span class="fl">4.6</span>) <span class="co"># 2.3 = 90% snail mortality from molluscicide event (per day)</span>
-          
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">1</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">60</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;bimonthly&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">2</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">60</span>,<span class="dv">90</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;skip30&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">3</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">90</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;skip60&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">4</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;skip90&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">5</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">90</span>); me_fh =<span class="st"> &quot;skip120&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">6</span>){me_days =<span class="st"> </span><span class="dv">30</span>; me_fh =<span class="st"> &quot;day30&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">7</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">90</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;monthly&quot;</span>}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">8</span>){me_days =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">140</span>,<span class="dv">10</span>);me_fh =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;hailmary&quot;</span>,me)}
-          <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">151</span>){me_days &lt;-<span class="st"> </span>n.ticks <span class="op">+</span><span class="st"> </span><span class="dv">1</span>; me_fh =<span class="st"> &quot;&quot;</span>}
-          
-          
-          <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">1</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">1</span>]}
-          <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">2</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">2</span>]}
-          <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">3</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">3</span>]}
-          <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">4</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">4</span>]}
-          <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">5</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">5</span>]}
-          
-          hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span>
-          <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>){detr_pars &lt;-<span class="st"> </span><span class="dv">0</span>; algae &lt;-<span class="st"> </span>rg_pars}<span class="cf">else</span>{detr_pars &lt;-<span class="st"> </span>detr_pars; rg_pars &lt;-<span class="st"> </span><span class="dv">0</span>}
-          <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">algae:&quot;</span>,rg_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">detritus:&quot;</span>,detr_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rho:&quot;</span>,<span class="dv">0</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">alpha:&quot;</span>,alpha_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">mortality (if not mollusciciding):&quot;</span>,hb_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide days:&quot;</span>,me_pars, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide impact: &quot;</span>,me_im_pars)
-        }<span class="cf">else</span>{ <span class="co"># dont run snail control </span>
-          me_pars &lt;-<span class="st"> </span>n.ticks<span class="op">+</span><span class="dv">1</span>
-          me_days &lt;-<span class="st"> </span>n.ticks <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-          me_im_pars &lt;-<span class="st"> </span><span class="dv">0</span>
-          me_im &lt;-<span class="st"> </span><span class="dv">0</span>
-          hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span><span class="co">#hb_pars</span>
-          me_fh =<span class="st"> &quot;nocontrol&quot;</span>
-          <span class="kw">cat</span>(<span class="st">&quot;Snail control will occur every &quot;</span>,<span class="kw">max</span>(me_pars)<span class="op">/</span><span class="kw">length</span>(me_pars),<span class="st">&quot; days </span><span class="ch">\n</span><span class="st"> Mortality is &quot;</span>,hb_pars) 
-        }
-        
-        <span class="kw">cat</span>(<span class="st">&quot;Mollusciding on day&quot;</span>, me_pars)
-        me_im_pars
-        
-        <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>){detr =<span class="dv">0</span>; rg =<span class="st"> </span><span class="fl">0.25</span>;detr_impact=<span class="dv">0</span>;detr_impact_days=n.ticks<span class="op">+</span><span class="dv">1</span>}<span class="cf">else</span>{detr=<span class="fl">0.25</span>;rg=<span class="dv">0</span>; alpha_pars=<span class="dv">1</span>; rho_pars =<span class="st"> </span><span class="dv">1</span>}
-        
-        <span class="co"># @detr_impact</span>
-        <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){
-          detr_impact_days =<span class="st"> </span>detr_impact_days <span class="co"># set detritus impact days </span>
-        }<span class="cf">else</span>{
-          detr_impact_days =<span class="st"> </span>n.ticks<span class="op">+</span><span class="dv">1</span> <span class="co"># no detritus impact </span>
-        }
-        
-        <span class="co"># @biocontrol</span>
-        <span class="cf">if</span>(biocontrol<span class="op">==</span><span class="dv">1</span>){
-          hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span> <span class="co"># set baseline mortality </span>
-          <span class="cf">if</span>(be_event<span class="op">==</span><span class="dv">1</span>){snail_snack =<span class="st"> </span><span class="dv">4</span><span class="op">:</span><span class="dv">7</span>}
-          <span class="cf">if</span>(be_event<span class="op">==</span><span class="dv">2</span>){snail_snack =<span class="st"> </span><span class="dv">8</span><span class="op">:</span><span class="dv">10</span>}
-          <span class="cf">if</span>(be_event<span class="op">==</span><span class="dv">3</span>){snail_snack =<span class="st"> </span><span class="dv">12</span><span class="op">:</span><span class="dv">15</span>}
-          <span class="cf">if</span>(be_event<span class="op">==</span><span class="dv">4</span>){snail_snack =<span class="st"> </span><span class="dv">18</span><span class="op">:</span><span class="dv">22</span>}
-        }
-        
-        <span class="co"># file handles   ----------------------------------------------------------</span>
-        <span class="cf">if</span>(snail_control<span class="op">==</span><span class="dv">1</span>){    
-          <span class="cf">if</span>(hailmary<span class="op">==</span><span class="dv">1</span>){ <span class="co"># @hailmary</span>
-            fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,me_fh,<span class="st">&quot;_rep&quot;</span>,rn);fhh <span class="co"># use for success/failure plot (fig 2) in plos_one sim</span>
-            <span class="co"># fhh = paste0(resource_type,&quot;_&quot;,me_fh,&quot;_meim&quot;,me_im_event,&quot;_rep&quot;,rn);fhh # use for hailmary120 for me_im_event = 1:5. plosone fig 3 (28-7-19))</span>
-            global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/hailmary/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
-          }<span class="cf">else</span>{
-            fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,me_fh,<span class="st">&quot;_meim&quot;</span>,me_im_event,<span class="st">&quot;_rep&quot;</span>,rn);fhh
-            global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/&quot;</span>,me_fh,<span class="st">&quot;/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
-          }
-        }
-        <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){
-          fhh =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;detday_&quot;</span>,detr_impact_days[<span class="dv">1</span>],<span class="st">&quot;_detim_&quot;</span>,detr_im<span class="op">*</span><span class="dv">100</span>);fhh
-          global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/detr_impact_sims/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
-        }
-        <span class="cf">if</span>(biocontrol<span class="op">==</span><span class="dv">1</span>){
-          fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_be&quot;</span>,be_event,<span class="st">&quot;_hostpop&quot;</span>,init_host_pop,<span class="st">&quot;_predpop&quot;</span>,pred_p);fhh
-          global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/biocontrol_sims/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
-        }  
-        
-        <span class="cf">if</span>(no_control<span class="op">==</span><span class="dv">1</span>){
-          <span class="co"># no control scenario</span>
-          fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,me_fh,<span class="st">&quot;_meim&quot;</span>,me_im_event,<span class="st">&quot;_rep&quot;</span>,rn);fhh
-          global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/nocontrol/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
-        }
-        
-        
-        <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>){detr_pars &lt;-<span class="st"> </span><span class="dv">0</span>; algae &lt;-<span class="st"> </span>rg_pars}<span class="cf">else</span>{detr_pars &lt;-<span class="st"> </span>detr_pars; rg_pars &lt;-<span class="st"> </span><span class="dv">0</span>}
-        <span class="cf">if</span>(<span class="kw">length</span>(me_days)<span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span><span class="dv">3</span>){me_days =<span class="st"> </span><span class="kw">rep</span>(me_days,<span class="dv">4</span>)} <span class="co"># set vector same length as in sim model</span>
-        <span class="cf">if</span>(<span class="kw">length</span>(detr_impact_days)<span class="op">==</span><span class="dv">1</span>){detr_impact_days =<span class="st"> </span><span class="kw">rep</span>(detr_impact_days,<span class="dv">2</span>)} <span class="co"># set vector same length as in sim model</span>
-        <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">algae:&quot;</span>,rg_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">detritus:&quot;</span>,detr_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rho:&quot;</span>,<span class="dv">0</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">alpha:&quot;</span>,alpha_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">mortality (if not mollusciciding):&quot;</span>,hb_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide days:&quot;</span>,<span class="kw">unique</span>(me_days), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide impact: &quot;</span>,me_im_pars)
-        <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">M days = &quot;</span>,<span class="kw">unique</span>(me_days)); <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">M impact = &quot;</span>,me_im); <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Det impact days = &quot;</span>,detr_impact_days) 
-        global_output_fh
-        
-        
-        ####################################  start netlogo sim  
-        <span class="cf">for</span>(hb <span class="cf">in</span> hb_pars){
-          <span class="cf">for</span>(detr <span class="cf">in</span> detr_pars){ <span class="co"># loop through detritus inputs</span>
-            <span class="cf">for</span>(alpha <span class="cf">in</span> alpha_pars){ <span class="co"># loop through alphas (amplitude in food cycle)</span>
-              <span class="cf">for</span>(rho <span class="cf">in</span> rho_pars){ <span class="co"># loop through rhos (periodicity of food cycle)</span>
-                <span class="cf">for</span>(rg <span class="cf">in</span> rg_pars){ <span class="co"># loop through rgs (food growth rates)</span>
-                  <span class="cf">for</span>(me <span class="cf">in</span> me_pars){ <span class="co"># loop through me (molluscicide day events) comment out for @hailmary</span>
-                  <span class="cf">for</span>(me_im <span class="cf">in</span> me_im_pars){ <span class="co"># loop through me_im (molluscicide impact events)</span>
-                    
-                    <span class="kw">NLCommand</span>(<span class="st">&quot;setup&quot;</span>)
-                    day &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># reset days </span>
-                    Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function </span>
-                    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n.ticks){ <span class="co"># start nl sim  @netlogo</span>
-                      <span class="co"># define food dynamics for cyclical algal (logistic food growth equation) or detritus food sources</span>
-                      alpha &lt;-<span class="st"> </span>alpha <span class="co"># amplitude of resources</span>
-                      rho &lt;-<span class="st"> </span>rho  <span class="co"># periodicity (time range of resource cycles)  </span>
-                      rg &lt;-<span class="st"> </span>rg <span class="co"># resource growth rate </span>
-                      rg_t &lt;-<span class="st"> </span>rg <span class="op">+</span><span class="st"> </span>alpha <span class="op">*</span><span class="st"> </span>rg <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>t<span class="op">/</span>rho) <span class="co"># equilibrium cyclical resource dynamics (19-12-18)</span>
-                      pars[<span class="st">&quot;r&quot;</span>] &lt;-<span class="st"> </span>rg_t <span class="co"># set resource growth rate </span>
-                      pars[<span class="st">&quot;Det&quot;</span>] &lt;-<span class="st"> </span>detr <span class="co"># Units mg C/L-1 d-1 (detritus)</span>
-                      
-                      <span class="co"># @detr_impact -------------------------------------------------------------------</span>
-                      
-                      <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){ <span class="co"># detritus impact on select days</span>
-                        <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">2</span>]){ 
-                          detr_<span class="dv">95</span> &lt;-<span class="st"> </span>detr <span class="op">*</span><span class="st"> </span>detr_im <span class="co"># reduce detr supply rate to 25%</span>
-                          pars[<span class="st">&quot;Det&quot;</span>] &lt;-<span class="st"> </span>detr_<span class="dv">95</span> <span class="co"># set det to detr95</span>
-                          detr &lt;-<span class="st"> </span>pars[<span class="st">&quot;Det&quot;</span>] <span class="co"># replace exisiting det for forthcoming days </span>
-                        }
-                      }
-                      <span class="co"># else{ # no detritus impact and rebound back to normal detr growth </span>
-                      <span class="co">#     pars[&quot;Det&quot;] &lt;- detr # Units mg C/L-1 d-1 (detritus)</span>
-                      <span class="co">#     }</span>
-                      
-                      <span class="co"># @snail_control (me events) -------------------------------------------------------------------</span>
-                      <span class="cf">if</span>(snail_control<span class="op">==</span><span class="dv">1</span>){
-                        <span class="co"># if(day==me){ # for me_pars loop (separate sims per me_event) @hailmary</span>
-                          <span class="co"># if(day %% me_day1==0){ # @me_day (v. 1.4) (multiple me_events per sim)</span>
-                          <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">4</span>]){ <span class="co"># @me_day (v. 1.4) (select multiple me_events per sim)</span>
-                          hb &lt;-<span class="st"> </span>me_im
-                          <span class="co"># cat(&quot;\n---------- DEAD SNAILS \ndays = &quot;, day,&quot;\nnumber of snails = &quot;, length(snail.stats$L))</span>
-                        }<span class="cf">else</span>{hb &lt;-<span class="st"> </span>hb_pars[<span class="dv">1</span>]} <span class="co"># hb on non-snail control days </span>
-                      }<span class="cf">else</span>{hb &lt;-<span class="st"> </span>hb_pars[<span class="dv">1</span>]} <span class="co"># hb when not using snail control </span>
-                      
-                      <span class="co"># set environment variables </span>
-                      Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function </span>
-                      environment =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">NLGetAgentSet</span>(<span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;Z&quot;</span>, <span class="st">&quot;G&quot;</span>), <span class="st">&quot;patches&quot;</span>)) <span class="co"># calc food, free miracidia, cercariae released, and eggs, per patch</span>
-                      
-                      <span class="co"># if there are hosts </span>
-                      <span class="cf">if</span>(<span class="kw">NLReport</span>(<span class="st">&quot;count snails&quot;</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>){
-                        <span class="co"># set host variables</span>
-                        snail.stats =<span class="st"> </span><span class="kw">NLGetAgentSet</span>(<span class="kw">c</span>(<span class="st">&quot;who&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;ee&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;RH&quot;</span>, <span class="st">&quot;P&quot;</span>, <span class="st">&quot;RPP&quot;</span>, <span class="st">&quot;DAM&quot;</span>, <span class="st">&quot;HAZ&quot;</span>, <span class="st">&quot;LG&quot;</span>), <span class="st">&quot;snails&quot;</span>)
-                        N.snails =<span class="st"> </span><span class="kw">length</span>(snail.stats[,<span class="st">&quot;L&quot;</span>])
-                        
-                        <span class="co"># Infect snails</span>
-                        Infection.step =<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">Infection</span>(snail.stats, environment[<span class="dv">2</span>], pars)) <span class="co"># Who gets infected</span>
-                        snail.stats[<span class="kw">which</span>(Infection.step[<span class="dv">1</span><span class="op">:</span>N.snails] <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>),<span class="st">&quot;P&quot;</span>] =<span class="st"> </span>snail.stats[<span class="kw">which</span>(Infection.step[<span class="dv">1</span><span class="op">:</span>N.snails] <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>),<span class="st">&quot;P&quot;</span>] <span class="op">+</span><span class="st"> </span><span class="fl">2.85e-5</span> <span class="co"># add biomass of one miracidia</span>
-                        
-                        <span class="co"># @biocontrol -------------------------------------------------- </span>
-                        <span class="cf">if</span>(biocontrol <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){
-                          <span class="co"># if(any(round(snail.stats$L) == snail_snack) == T){</span>
-                          <span class="cf">if</span>(<span class="kw">any</span>(<span class="kw">round</span>(snail.stats<span class="op">$</span>L) <span class="op">==</span><span class="st"> </span>snail_snack[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>snail_snack[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>snail_snack[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>snail_snack[<span class="dv">4</span>])<span class="op">==</span>T){ 
-                            <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Eaten snails = &quot;</span>, <span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>L <span class="op">==</span><span class="st"> </span>snail_snack)))
-                            <span class="co"># snail.stats$L = round(snail.stats$L)</span>
-                            <span class="co"># snail.stats$L[snail.stats$L == snail_snack] &lt;- 0 # kill preyed hosts</span>
-                            hb &lt;-<span class="st"> </span>hb <span class="op">+</span><span class="st"> </span>(pred_a <span class="op">*</span><span class="st"> </span>pred_p) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>pred_a <span class="op">*</span><span class="st"> </span>pred_h <span class="op">*</span><span class="st"> </span>N.snails)
+<span class="co"># for(snail_snack_min in snail_snack_min_vec){ # @snailsnack</span>
+  <span class="co"># for(snail_snack_max in snail_snack_max_vec){ # @snailsnack</span>
+    
+    <span class="co"># file handle for bio</span>
+    <span class="kw">ifelse</span>(snail_snack_window<span class="op">==</span><span class="dv">1</span>, be_fh &lt;-<span class="st"> </span><span class="kw">paste0</span>(snail_snack_min,<span class="st">&quot;_&quot;</span>,snail_snack_max), be_fh &lt;-<span class="st"> &quot;exp&quot;</span>)
+    
+    <span class="cf">if</span>(hailmary<span class="op">==</span><span class="dv">1</span>){me_pars &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">140</span>,<span class="dv">10</span>); me_event &lt;-<span class="st"> </span><span class="dv">8</span>}<span class="cf">else</span>{me_pars &lt;-<span class="st"> </span>n.ticks <span class="op">+</span><span class="st"> </span><span class="dv">1</span>} <span class="co"># set hailmary file handle</span>
+    <span class="co">#  save multiple sims to dir ---------------------------------------</span>
+    <span class="cf">for</span>(init_host_pop <span class="cf">in</span> init_host_pop_vec){
+      <span class="cf">for</span>(pred_p <span class="cf">in</span> pred_ps){
+        <span class="co"># for(detr_impact_days in detr_impact_days){</span>
+        <span class="cf">for</span>(rn <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>rep_num){
+          <span class="co"># for(detr_im in detr_im){</span>
+          <span class="cf">for</span>(me_im_event <span class="cf">in</span> me_im_events){ <span class="co"># 1:5 # me impact (0.69, 1.39, 2.3 ...)</span>
+            <span class="cf">for</span>(me_event <span class="cf">in</span> me_events){ <span class="co"># 1:7 # run all me event scenarios and save to file.</span>
+              
+              <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">predp=&quot;</span>,pred_p)
+              <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">prod=&quot;</span>,rg)
+              <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rep=&quot;</span>,rn)
+              
+              <span class="co"># for hailmary, uncomment below and comment out me_pars loop in next loop</span>
+              <span class="co"># for(me in me_pars){ # loop through mes (molluscicide events) for saving one me event per sim to dir (hailmary)</span>
+              
+              resources=<span class="st">&quot;event&quot;</span> <span class="co"># set resource cycles</span>
+              alpha_pars =<span class="st"> </span><span class="dv">0</span>
+              rho_pars =<span class="st"> </span><span class="dv">1</span>
+              
+              <span class="co"># set type of resource input @netlogo</span>
+              set_resource_type&lt;-<span class="cf">function</span>(resource_type){ <span class="co"># set resource input in env  </span>
+                <span class="cf">if</span>(resource_type <span class="op">==</span><span class="st"> &quot;detritus&quot;</span>){<span class="kw">NLCommand</span>(<span class="st">&quot;set resource_type </span><span class="ch">\&quot;</span><span class="st">detritus</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}<span class="cf">else</span>{<span class="kw">NLCommand</span>(<span class="st">&quot;set resource_type </span><span class="ch">\&quot;</span><span class="st">algae</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}}
+              <span class="kw">set_resource_type</span>(resource_type) <span class="co"># set resource type: &quot;detritus&quot; or &quot;algae&quot;  @netlogo</span>
+              
+              <span class="co"># set type of resource dynamics @netlogo</span>
+              set_resources&lt;-<span class="cf">function</span>(resources){ <span class="co"># set resource input in env  </span>
+                <span class="cf">if</span> (resources <span class="op">==</span><span class="st"> &quot;cyclical&quot;</span>){<span class="kw">NLCommand</span>(<span class="st">&quot;set resources </span><span class="ch">\&quot;</span><span class="st">cyclical</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}<span class="cf">else</span>{<span class="kw">NLCommand</span>(<span class="st">&quot;set resources </span><span class="ch">\&quot;</span><span class="st">event</span><span class="ch">\&quot;</span><span class="st"> &quot;</span>)}}
+              <span class="kw">set_resources</span>(resources) <span class="co"># set resources: &quot;cyclical&quot; or &quot;event&quot;  @netlogo</span>
+              <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Resource type = &quot;</span>,resource_type,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Resources = &quot;</span>,resources)
+              
+              <span class="co"># set initial pop size @netlogo</span>
+              <span class="kw">NLCommand</span>(<span class="st">&quot;set init_host_pop&quot;</span>, init_host_pop)
+              
+              <span class="cf">if</span>(save_to_file<span class="op">==</span><span class="dv">1</span>){<span class="kw">pdf</span>(<span class="kw">paste0</span>(wd,<span class="st">&quot;/master_sim.pdf&quot;</span>),<span class="dt">onefile=</span>T,<span class="dt">paper=</span><span class="st">&quot;a4&quot;</span>)}
+              
+              <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;detritus&quot;</span>){
+                detr_pars &lt;-<span class="st"> </span>detr_pars; alpha_pars &lt;-<span class="st"> </span><span class="dv">0</span>; rho_pars &lt;-<span class="st"> </span><span class="dv">1</span>; rg &lt;-<span class="st"> </span><span class="dv">0</span>; rg_pars &lt;-<span class="st"> </span><span class="dv">0</span>;<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">detritus input = &quot;</span>,detr_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rg = &quot;</span>,rg_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">hb = &quot;</span>, hb_pars)
+              }<span class="cf">else</span>{detr &lt;-<span class="st"> </span><span class="dv">0</span>; detr_pars &lt;-<span class="st"> </span><span class="dv">0</span>;<span class="kw">cat</span>(<span class="st">&quot;detritus input = &quot;</span>, detr_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rg = &quot;</span>,rg_pars)}
+              <span class="co"># set resource to cycle or be constant</span>
+              <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>){
+                <span class="cf">if</span>(resources<span class="op">==</span><span class="st">&quot;cyclical&quot;</span>){
+                  rg_pars &lt;-<span class="st"> </span>rg_pars <span class="co"># resource growth rates (rs)</span>
+                  alpha_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>) <span class="co"># amplitude of resources (alphas)</span>
+                  rho_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="kw">seq</span>(<span class="dv">10</span>,n.ticks,<span class="dv">10</span>)) <span class="co"># periodicity of resources (rhos)</span>
+                  <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">alphas = &quot;</span>,alpha_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rhos = &quot;</span>,rho_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rgs = &quot;</span>,rg_pars)
+                }<span class="cf">else</span>{alpha_pars &lt;-<span class="st"> </span><span class="dv">0</span>; rho_pars &lt;-<span class="st"> </span><span class="dv">1</span>; rg_pars &lt;-<span class="st"> </span>rg_pars;<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">alphas = &quot;</span>,alpha_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rhos = &quot;</span>,rho_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rg = &quot;</span>,rg_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">hb = &quot;</span>, hb_pars)}
+              }
+              
+              Env_G =<span class="st"> </span><span class="kw">numeric</span>() <span class="co"># create empty environment vector </span>
+              day &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># reset sim days </span>
+              
+              <span class="co"># individual outputs</span>
+              cerc_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># cercariae   </span>
+              food_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># food in env </span>
+              juv_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># juvenile hosts</span>
+              adult_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># adult hosts </span>
+              infec_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># infected hosts</span>
+              infec_shed_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># infected shedding hosts</span>
+              hl_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># host length</span>
+              pmass_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># parasite biomass </span>
+              host_biomass_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># host biomass list </span>
+              egg_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># egg density in env</span>
+              egg_mean_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># mean host eggs list</span>
+              infec_shed_length_list &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># length of infected shedding hosts</span>
+              
+              <span class="co"># master outputs</span>
+              cerc_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for cerc density (Env_Z) </span>
+              food_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for food dynamics (Env_F) </span>
+              juv_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for total host pop () </span>
+              adult_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for total host pop () </span>
+              infec_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for infected host pop () </span>
+              infec_shed_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for infected shedding host pop</span>
+              hl_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for host length</span>
+              pmass_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for parasite biomass </span>
+              host_biomass_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for host biomass</span>
+              egg_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for egg density in env</span>
+              egg_mean_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for mean host eggs </span>
+              infec_shed_length_master &lt;-<span class="st"> </span><span class="kw">list</span>() <span class="co"># master list for length of infected shedding hosts</span>
+              
+              <span class="co"># define plot window</span>
+              plot.matrix &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="kw">length</span>(rg_pars),<span class="kw">length</span>(detr_pars)))
+              <span class="kw">par</span>(<span class="dt">mfrow=</span>plot.matrix)
+              
+              
+              <span class="co"># ~~~~~~ snail control -----------------------------------------------------------</span>
+              
+              <span class="cf">if</span>(snail_control <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){
+                
+                me_im_pars &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="fl">0.69</span>, <span class="fl">1.39</span>, <span class="fl">2.3</span>, <span class="dv">3</span>, <span class="fl">4.6</span>) <span class="co"># 2.3 = 90% snail mortality from molluscicide event (per day)</span>
+                
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">1</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">60</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;bimonthly&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">2</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">60</span>,<span class="dv">90</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;skip30&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">3</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">90</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;skip60&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">4</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;skip90&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">5</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">90</span>); me_fh =<span class="st"> &quot;skip120&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">6</span>){me_days =<span class="st"> </span><span class="dv">30</span>; me_fh =<span class="st"> &quot;day30&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">7</span>){me_days =<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">90</span>,<span class="dv">120</span>); me_fh =<span class="st"> &quot;monthly&quot;</span>}
+                <span class="cf">if</span>(me_event<span class="op">==</span><span class="dv">8</span>){me_days =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">140</span>,<span class="dv">10</span>);me_fh =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;hailmary&quot;</span>,me)}
+                <span class="cf">if</span>(me_event<span class="op">==</span>n.ticks<span class="op">+</span><span class="dv">1</span>){me_days &lt;-<span class="st"> </span>n.ticks <span class="op">+</span><span class="st"> </span><span class="dv">1</span>; me_fh =<span class="st"> &quot;&quot;</span>}
+                
+                
+                <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">1</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">1</span>]}
+                <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">2</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">2</span>]}
+                <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">3</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">3</span>]}
+                <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">4</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">4</span>]}
+                <span class="cf">if</span>(me_im_event<span class="op">==</span><span class="dv">5</span>){me_im_pars =<span class="st"> </span>me_im_pars[<span class="dv">5</span>]}
+                
+                hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span>
+                <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>){detr_pars &lt;-<span class="st"> </span><span class="dv">0</span>; algae &lt;-<span class="st"> </span>rg_pars}<span class="cf">else</span>{detr_pars &lt;-<span class="st"> </span>detr_pars; rg_pars &lt;-<span class="st"> </span><span class="dv">0</span>}
+                <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">algae:&quot;</span>,rg_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">detritus:&quot;</span>,detr_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rho:&quot;</span>,<span class="dv">0</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">alpha:&quot;</span>,alpha_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">mortality (if not mollusciciding):&quot;</span>,hb_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide days:&quot;</span>,me_pars, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide impact: &quot;</span>,me_im_pars)
+              }<span class="cf">else</span>{ <span class="co"># dont run snail control </span>
+                me_pars &lt;-<span class="st"> </span>n.ticks<span class="op">+</span><span class="dv">1</span>
+                me_days &lt;-<span class="st"> </span>n.ticks <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+                me_im_pars &lt;-<span class="st"> </span><span class="dv">0</span>
+                me_im &lt;-<span class="st"> </span><span class="dv">0</span>
+                hb_pars &lt;-<span class="st"> </span><span class="fl">0.001</span> <span class="co">#hb_pars</span>
+                me_fh =<span class="st"> </span><span class="kw">paste0</span>(n.ticks,<span class="st">&quot;days&quot;</span>)
+                <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Snail control will occur every &quot;</span>,<span class="kw">max</span>(me_pars)<span class="op">/</span><span class="kw">length</span>(me_pars),<span class="st">&quot; days </span><span class="ch">\n</span><span class="st"> Mortality is &quot;</span>,hb_pars) 
+              }
+              
+              <span class="kw">cat</span>(<span class="st">&quot;Mollusciding on day&quot;</span>, me_pars)
+              me_im_pars
+              
+              <span class="co"># if(resource_type==&quot;algae&quot;){detr =0; rg = 0.25;detr_impact=0;detr_impact_days=n.ticks+1}else{detr=0.25;rg=0; alpha_pars=1; rho_pars = 1}</span>
+              
+              <span class="co"># @detr_impact</span>
+              <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){
+                detr_impact_days =<span class="st"> </span>detr_impact_days <span class="co"># set detritus impact days </span>
+              }<span class="cf">else</span>{
+                detr_impact_days =<span class="st"> </span>n.ticks<span class="op">+</span><span class="dv">1</span> <span class="co"># no detritus impact </span>
+              }
+              
+              <span class="co"># file handles   ----------------------------------------------------------</span>
+              <span class="cf">if</span>(snail_control<span class="op">==</span><span class="dv">1</span>){    
+                <span class="cf">if</span>(hailmary<span class="op">==</span><span class="dv">1</span>){ <span class="co"># @hailmary</span>
+                  fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,me_fh,<span class="st">&quot;_rep&quot;</span>,rn);fhh <span class="co">#</span>
+                  <span class="co"># fhh = paste0(resource_type,&quot;_&quot;,me_fh,&quot;_meim&quot;,me_im_event,&quot;_rep&quot;,rn);fhh # use for hailmary120 for me_im_event = 1:5. </span>
+                  global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/plos_sims/hailmary/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
+                }<span class="cf">else</span>{
+                  fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,me_fh,<span class="st">&quot;_meim&quot;</span>,me_im_event,<span class="st">&quot;_rep&quot;</span>,rn);fhh
+                  global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/plos_sims/&quot;</span>,me_fh,<span class="st">&quot;/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
+                }
+              }
+              <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){
+                fhh =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;detday_&quot;</span>,detr_impact_days[<span class="dv">1</span>],<span class="st">&quot;_detim_&quot;</span>,detr_im<span class="op">*</span><span class="dv">1000</span>);fhh
+                global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/detr_impact_sims/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
+              }
+              <span class="cf">if</span>(biocontrol<span class="op">==</span><span class="dv">1</span>){
+                <span class="cf">if</span>(productivity<span class="op">==</span><span class="dv">1</span>){ <span class="co"># for altering rg and det values</span>
+                  <span class="kw">ifelse</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>, resource_fh &lt;-<span class="st"> </span>rg, resource_fh &lt;-<span class="st"> </span>detr)
+                  fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,be_fh,<span class="st">&quot;_hostpop&quot;</span>,init_host_pop,<span class="st">&quot;_predpop&quot;</span>,pred_p<span class="op">*</span>fh_buff,<span class="st">&quot;_prod&quot;</span>,resource_fh,<span class="st">&quot;_rep&quot;</span>,rn);fhh
+                  global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/biocontrol_sims/&quot;</span>,init_host_pop,<span class="st">&quot;/new_new_pred_a/productivity/productivity_0_25/pred_05_100/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>) 
+                }<span class="cf">else</span>{
+                  fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,be_fh,<span class="st">&quot;_hostpop&quot;</span>,init_host_pop,<span class="st">&quot;_predpop&quot;</span>,pred_p<span class="op">*</span>fh_buff,<span class="st">&quot;_rep&quot;</span>,rn);fhh
+                  global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/biocontrol_sims/&quot;</span>,init_host_pop,<span class="st">&quot;/new_new_pred_a/highpred/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>) 
+                }
+              }  
+              
+              <span class="cf">if</span>(no_control<span class="op">==</span><span class="dv">1</span>){
+                <span class="co"># no control scenario</span>
+                fhh =<span class="st"> </span><span class="kw">paste0</span>(resource_type,<span class="st">&quot;_&quot;</span>,me_fh,<span class="st">&quot;_meim&quot;</span>,me_im_event,<span class="st">&quot;_rep&quot;</span>,rn);fhh
+                global_output_fh =<span class="st"> </span><span class="kw">paste0</span>(wd,<span class="st">&quot;/nocontrol/150days_plus/&quot;</span>,fhh,<span class="st">&quot;.R&quot;</span>)
+              }
+              
+              <span class="cf">if</span>(resource_type<span class="op">==</span><span class="st">&quot;algae&quot;</span>){detr_pars &lt;-<span class="st"> </span><span class="dv">0</span>; algae &lt;-<span class="st"> </span>rg_pars}<span class="cf">else</span>{detr_pars &lt;-<span class="st"> </span>detr_pars; rg_pars &lt;-<span class="st"> </span><span class="dv">0</span>}
+              <span class="cf">if</span>(<span class="kw">length</span>(me_days)<span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">2</span> <span class="op">|</span><span class="st"> </span><span class="dv">3</span>){me_days =<span class="st"> </span><span class="kw">rep</span>(me_days,<span class="dv">4</span>)} <span class="co"># set vector same length as in sim model</span>
+              <span class="cf">if</span>(<span class="kw">length</span>(detr_impact_days)<span class="op">==</span><span class="dv">1</span>){detr_impact_days =<span class="st"> </span><span class="kw">rep</span>(detr_impact_days,<span class="dv">2</span>)} <span class="co"># set vector same length as in sim model</span>
+              <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">algae:&quot;</span>,rg_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">detritus:&quot;</span>,detr_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">rho:&quot;</span>,<span class="dv">0</span>,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">alpha:&quot;</span>,alpha_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">mortality (if not mollusciciding):&quot;</span>,hb_pars,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide days:&quot;</span>,<span class="kw">unique</span>(me_days), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">molluscicide impact: &quot;</span>,me_im_pars)
+              <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">M days = &quot;</span>,<span class="kw">unique</span>(me_days)); <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">M impact = &quot;</span>,me_im); <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Det impact days = &quot;</span>,detr_impact_days) 
+              global_output_fh
+              
+              ####################################  start netlogo sim ######################################## 
+              <span class="cf">for</span>(hb <span class="cf">in</span> hb_pars){
+                <span class="cf">for</span>(detr <span class="cf">in</span> detr_pars){ <span class="co"># loop through detritus inputs # comment out for @productivity</span>
+                  <span class="cf">for</span>(alpha <span class="cf">in</span> alpha_pars){ <span class="co"># loop through alphas (amplitude in food cycle)</span>
+                    <span class="cf">for</span>(rho <span class="cf">in</span> rho_pars){ <span class="co"># loop through rhos (periodicity of food cycle)</span>
+                      <span class="cf">for</span>(rg <span class="cf">in</span> rg_pars){ <span class="co"># loop through rgs (food growth rates) # comment out for @productivity</span>
+                        <span class="cf">for</span>(me <span class="cf">in</span> me_pars){ <span class="co"># loop through me (molluscicide day events) comment out for @hailmary</span>
+                          <span class="cf">for</span>(me_im <span class="cf">in</span> me_im_pars){ <span class="co"># loop through me_im (molluscicide impact events)</span>
                             
-                          } 
-                        }
-                        
-                        <span class="co"># Update DEBS, HAZ=0 so survival probs are calculated for the current day</span>
-                        snail.update =<span class="st"> </span><span class="kw">t</span>(<span class="kw">mapply</span>(DEB, <span class="dt">L=</span>snail.stats[,<span class="dv">2</span>], <span class="dt">e=</span>snail.stats[,<span class="dv">3</span>], <span class="dt">D=</span>snail.stats[,<span class="dv">4</span>], <span class="dt">RH=</span>snail.stats[,<span class="dv">5</span>],
-                                                <span class="dt">P=</span>snail.stats[,<span class="dv">6</span>], <span class="dt">RP=</span>snail.stats[,<span class="dv">7</span>], <span class="dt">DAM=</span>snail.stats[,<span class="dv">8</span>], <span class="dt">Lp=</span>snail.stats[,<span class="dv">10</span>],<span class="co"># Food=environment[1]*(snail.stats[,2]^2)/sum(snail.stats[,2]^2), # update food availability per snail </span>
-                                                <span class="dt">MoreArgs =</span> <span class="kw">list</span>(<span class="dt">step=</span><span class="dv">1</span>, <span class="dt">HAZ=</span><span class="dv">0</span>, <span class="dt">Food=</span>environment[<span class="dv">1</span>],<span class="co"># constant food available (23-1-19)</span>
-                                                                <span class="dt">iM=</span>pars[<span class="st">&quot;iM&quot;</span>], <span class="dt">k=</span>pars[<span class="st">&quot;k&quot;</span>], <span class="dt">M=</span>pars[<span class="st">&quot;M&quot;</span>], <span class="dt">EM=</span>pars[<span class="st">&quot;EM&quot;</span>], <span class="dt">Fh=</span>pars[<span class="st">&quot;Fh&quot;</span>], 
-                                                                <span class="dt">muD=</span>pars[<span class="st">&quot;muD&quot;</span>],
-                                                                <span class="dt">DR=</span>pars[<span class="st">&quot;DR&quot;</span>], <span class="dt">yRP=</span>pars[<span class="st">&quot;yRP&quot;</span>], <span class="dt">ph=</span>pars[<span class="st">&quot;ph&quot;</span>], <span class="dt">yPE=</span>pars[<span class="st">&quot;yPE&quot;</span>], <span class="dt">iPM=</span>pars[<span class="st">&quot;iPM&quot;</span>], <span class="dt">eh=</span>pars[<span class="st">&quot;eh&quot;</span>],
-                                                                <span class="dt">mP=</span>pars[<span class="st">&quot;mP&quot;</span>], <span class="dt">alpha=</span>pars[<span class="st">&quot;alpha&quot;</span>], <span class="dt">yEF=</span>pars[<span class="st">&quot;yEF&quot;</span>], <span class="dt">LM=</span>pars[<span class="st">&quot;LM&quot;</span>], <span class="dt">kd=</span>pars[<span class="st">&quot;kd&quot;</span>], <span class="dt">z=</span>pars[<span class="st">&quot;z&quot;</span>], 
-                                                                <span class="dt">kk=</span>pars[<span class="st">&quot;kk&quot;</span>], 
-                                                                <span class="dt">hb=</span>hb,
-                                                                <span class="dt">theta=</span>pars[<span class="st">&quot;theta&quot;</span>], <span class="dt">mR=</span>pars[<span class="st">&quot;mR&quot;</span>], <span class="dt">yVE=</span>pars[<span class="st">&quot;yVE&quot;</span>], <span class="dt">SAtotal=</span> <span class="kw">sum</span>(snail.stats[,<span class="dv">2</span>]<span class="op">^</span><span class="dv">2</span>), 
-                                                                <span class="dt">ENV=</span>pars[<span class="st">&quot;ENV&quot;</span>], <span class="dt">r=</span>pars[<span class="st">&quot;r&quot;</span>], <span class="dt">K=</span>pars[<span class="st">&quot;K&quot;</span>], 
-                                                                <span class="dt">Det=</span>pars[<span class="st">&quot;Det&quot;</span>]))) <span class="co"># detritus (Det) defined in C file</span>
-                        
-                        snail.update[<span class="kw">is.nan</span>(snail.update)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn nans from matrix into 0</span>
-                        
-                        L =<span class="st"> </span>snail.update[,<span class="st">&quot;L&quot;</span>] <span class="co"># host structural length</span>
-                        e =<span class="st"> </span>snail.update[,<span class="st">&quot;e&quot;</span>] <span class="co"># host scaled reserve density    </span>
-                        D =<span class="st"> </span>snail.update[,<span class="st">&quot;D&quot;</span>] <span class="co"># host development </span>
-                        RH =<span class="st"> </span>snail.update[,<span class="st">&quot;RH&quot;</span>] <span class="co"># host energy to reproduction buffer  </span>
-                        DAM =<span class="st"> </span>snail.update[,<span class="st">&quot;DAM&quot;</span>] <span class="co"># host damage from starvation  </span>
-                        HAZ =<span class="st"> </span>snail.update[,<span class="st">&quot;HAZ&quot;</span>] <span class="co"># host hazard rate from starvation   </span>
-                        LG =<span class="st"> </span>snail.update[,<span class="st">&quot;LG&quot;</span>] <span class="co"># host shell length  </span>
-                        P =<span class="st"> </span>snail.update[,<span class="st">&quot;P&quot;</span>] <span class="co"># parasite mass (sum within host)</span>
-                        RP =<span class="st"> </span>snail.update[,<span class="st">&quot;RP&quot;</span>] <span class="co"># parasite reproductive buffer  </span>
-                        
-                        <span class="co"># ingestion = environment[1] - sum(snail.update[,&quot;Food&quot;]) # food intake by host from environment (for v.1.1)</span>
-                        chi &lt;-<span class="st"> </span>pars[<span class="st">&quot;M&quot;</span>]<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;EM&quot;</span>]) <span class="co"># length to volume conversion factor for getting biomass</span>
-                        host_biomass &lt;-<span class="st"> </span><span class="kw">sum</span>(chi <span class="op">*</span><span class="st"> </span>L<span class="op">^</span><span class="dv">3</span>) <span class="co"># get total host biomass</span>
-                        
-                        Eggs =<span class="st"> </span><span class="kw">floor</span>(RH<span class="op">/</span><span class="fl">0.015</span>)  <span class="co"># Figure out how many (whole) eggs are released  </span>
-                        <span class="co"># if(day==me){Eggs &lt;- Eggs[1:round(0.1*length(Eggs))]} # kill off 90% of snail eggs in water with molluscicide event (v. 1.2)  </span>
-                        RH =<span class="st"> </span>RH <span class="op">%%</span><span class="st"> </span><span class="fl">0.015</span>        <span class="co"># Remove released cercariae from the buffer</span>
-                        Cercs =<span class="st"> </span><span class="kw">floor</span>(RP<span class="op">/</span><span class="fl">4e-5</span>)  <span class="co"># Figure out how many (whole) cercs are released</span>
-                        RP =<span class="st"> </span>RP <span class="op">%%</span><span class="st"> </span><span class="fl">4e-5</span>         <span class="co"># Remove released cercariae from buffer</span>
-                        Eggs =<span class="st"> </span><span class="kw">as.integer</span>(Eggs); Cercs =<span class="st"> </span><span class="kw">as.integer</span>(Cercs) 
-                        eggs_mean &lt;-<span class="st"> </span><span class="kw">mean</span>(Eggs[Eggs <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>]) <span class="co"># get mean eggs in env</span>
-                        eggs_mean &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(eggs_mean)
-                        
-                        <span class="co"># Update environment </span>
-                        Env_M =<span class="st"> </span><span class="kw">as.numeric</span>(Infection.step[N.snails <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;M_in&quot;</span>]) <span class="co"># total miracidia density </span>
-                        Env_Z =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">3</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;m_Z&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(Cercs)<span class="op">/</span>pars[<span class="st">&quot;ENV&quot;</span>]) <span class="co"># total cerc density</span>
-                        Env_G =<span class="st"> </span><span class="kw">as.integer</span>(Env_G) <span class="co"># set pop density outputs to integer to pass into Env_G and rbinom func</span>
-                        
-                        <span class="co"># @snail_control (me events) -------------------------------------------------------------------</span>
-                        <span class="co"># kill off 90% of snail eggs in water with molluscicide event </span>
-                        <span class="co"># ifelse(day==me,Env_G[day] &lt;- max(0, 0.1*sum(Eggs),na.rm=T),Env_G[day] &lt;- max(0, sum(Eggs),na.rm=T)) # for me_pars loop (separate sims per me_event) @hailmary</span>
-                        <span class="co"># ifelse(day %% me_day1==0,Env_G[day] &lt;- max(0, 0.1*sum(Eggs),na.rm=T),Env_G[day] &lt;- max(0, sum(Eggs),na.rm=T)) # @me_day (v. 1.4) (multiple me_events per sim)</span>
-                        <span class="kw">ifelse</span>(day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">4</span>],Env_G[day] &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="dv">0</span>, <span class="fl">0.1</span><span class="op">*</span><span class="kw">sum</span>(Eggs),<span class="dt">na.rm=</span>T),Env_G[day] &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="dv">0</span>, <span class="kw">sum</span>(Eggs),<span class="dt">na.rm=</span>T)) <span class="co"># @me_day (v. 1.4)</span>
-                        
-                        <span class="co"># Env_G[day] &lt;- max(0, sum(Eggs),na.rm=T)</span>
-                        egg &lt;-<span class="st"> </span><span class="kw">sum</span>(Eggs) <span class="co"># get summed host eggs </span>
-                        
-                        Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function  </span>
-                        <span class="co"># Env_F = max(0.001, as.numeric(pars[&quot;K&quot;]*environment[1]/(environment[1] + (pars[&quot;K&quot;] - environment[1])*exp(-pars[&quot;r&quot;]*pars[&quot;step&quot;])) - ingestion)) # Analytical soln to logistic - ingestion (alphas [1,100]) (original r growth equation)</span>
-                        <span class="co"># Env_F = max(0.001, as.numeric(pars[&quot;K&quot;]*environment[1]/(environment[1] + (pars[&quot;K&quot;] - environment[1])*exp(-rg_t*pars[&quot;step&quot;])) - ingestion)) # Analytical soln to logistic - ingestion with equilibrium resource growth wave (rg_t) (alphas [0,1]) (for v.1.1)     </span>
-                        <span class="co"># F = F * exp(- r + alpha * r * sin(2 * pi * t/rho) * s) * (1 - F/K) - f(i_{M} * sum(L^2) # v. 1.2 algae and detritus with cyclical algal growth</span>
-                        <span class="co"># r_t &lt;- pars[&quot;r&quot;] + alpha * pars[&quot;r&quot;] * sin(2 * pi * t/rho) # equilibrium resource dynamics (static)</span>
-                        Env_F =<span class="st"> </span><span class="kw">max</span>(<span class="fl">0.001</span>, snail.update[<span class="dv">1</span>,<span class="st">&quot;Food&quot;</span>]) <span class="co"># algal or detritus food sources (for v.1.2)</span>
-                        
-                        <span class="co"># @detr_impact -------------------------------------------------------------------</span>
-                        
-                        <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){ <span class="co"># detritus impact on select days </span>
-                          <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">2</span>]){
-                            Env_F_<span class="dv">95</span> =<span class="st"> </span><span class="kw">max</span>(<span class="fl">0.001</span>, snail.update[<span class="dv">1</span>,<span class="st">&quot;Food&quot;</span>] <span class="op">*</span><span class="st"> </span>detr_im) <span class="co"># reduce detritusto 25% (v.1.4)</span>
-                            Env_F =<span class="st"> </span>Env_F_<span class="dv">95</span>
-                          }
-                        }
-                        <span class="co"># else{ # no detritus impact (normal conditions)</span>
-                        <span class="co">#   Env_F = max(0.001, snail.update[1,&quot;Food&quot;]) # algal or detritus food sources (for v.1.2)</span>
-                        <span class="co">#   }</span>
-                        
-                        <span class="co"># Command back to NL @netlogo</span>
-                        snail.commands =<span class="st"> </span><span class="kw">paste</span>(<span class="kw">mapply</span>(update.snails, <span class="dt">who=</span>snail.stats[,<span class="st">&quot;who&quot;</span>], <span class="dt">new.L=</span>L, <span class="dt">new.e=</span>e, <span class="dt">new.D=</span>D, <span class="dt">new.RH=</span>RH, <span class="dt">new.P=</span>P, <span class="dt">new.RP=</span>RP, <span class="dt">new.DAM=</span>DAM, <span class="dt">new.HAZ=</span>HAZ, <span class="dt">new.LG=</span>LG), <span class="dt">collapse=</span><span class="st">&quot; &quot;</span>)
-                        <span class="kw">NLCommand</span>(snail.commands) 
-                        
-                        hl_list[t] &lt;-<span class="st"> </span><span class="kw">mean</span>(L) <span class="co"># get average host lengths per model step </span>
-                        pmass_list[t] &lt;-<span class="st"> </span><span class="kw">sum</span>(P) <span class="co"># get total parasite mass per model step</span>
-                        host_biomass_list &lt;-<span class="st"> </span>host_biomass <span class="co"># get host mass </span>
-                        egg_mean_list[t] &lt;-<span class="st"> </span>eggs_mean <span class="co"># get mean eggs in env</span>
-                        
-                      }<span class="cf">else</span>{ <span class="co"># ------------------------------------ if there are no hosts  </span>
-                        
-                        Env_M =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;m_M&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>]) <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;M_in&quot;</span>]) <span class="co"># total miracidia density </span>
-                        Env_Z =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">3</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;m_Z&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>])) <span class="co"># total cerc density</span>
-                        Env_G =<span class="st"> </span><span class="kw">as.integer</span>(Env_G) <span class="co"># set pop density outputs to integer to pass into Env_G and rbinom func</span>
-                        Env_G[day] &lt;-<span class="st"> </span><span class="dv">0</span>
-                        Env_F =<span class="st"> </span><span class="kw">ifelse</span>(pars[<span class="st">&quot;Det&quot;</span>] <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="kw">as.numeric</span>(pars[<span class="st">&quot;K&quot;</span>]<span class="op">*</span>environment[<span class="dv">1</span>]<span class="op">/</span>(environment[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>(pars[<span class="st">&quot;K&quot;</span>] <span class="op">-</span><span class="st"> </span>environment[<span class="dv">1</span>])<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;r&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>]))), <span class="kw">as.numeric</span>(environment[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;Det&quot;</span>]))
-                        
-                        <span class="co"># @detr_impact -------------------------------------------------------------------</span>
-                        
-                        <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){ <span class="co"># detritus impact on select days </span>
-                          <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">2</span>]){
-                            Env_F =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;Det&quot;</span>]) <span class="op">*</span><span class="st"> </span>detr_im
-                          }
-                        }
-                        <span class="co"># else{ # no detritus impact (normal conditions)</span>
-                        <span class="co">#     Env_F = ifelse(pars[&quot;Det&quot;] == 0, as.numeric(pars[&quot;K&quot;]*environment[1]/(environment[1] + (pars[&quot;K&quot;] - environment[1])*exp(-pars[&quot;r&quot;]*pars[&quot;step&quot;]))), as.numeric(environment[1] + pars[&quot;Det&quot;]))</span>
-                        <span class="co">#   }</span>
-                        
-                        egg &lt;-<span class="st"> </span><span class="dv">0</span>
-                      } <span class="co"># end no hosts</span>
-                      
-                      <span class="co"># update patch variables </span>
-                      <span class="kw">NLCommand</span>(<span class="st">&quot;ask patch 0 0 [set F&quot;</span>, Env_F, <span class="st">&quot;set M&quot;</span>, Env_M, <span class="st">&quot;set Z&quot;</span>, Env_Z, <span class="st">&quot;set G&quot;</span>, Env_G[day], <span class="st">&quot;]&quot;</span>)
-                      
-                      <span class="co"># @snail_control -------------------------------------------------------------------</span>
-                      <span class="co"># kill snail eggs with molluscicide event  </span>
-                      <span class="cf">if</span>(day <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>){
-                        <span class="cf">if</span>(snail_control<span class="op">==</span><span class="dv">1</span>){ 
-                          <span class="co"># if(day==me){ # for me_pars loop (separate sims per me_event) @hailmary</span>
-                            <span class="co"># if(day %% me_day1==0){ # @me_day (v. 1.4) (multiple me_events per sim)</span>
-                            <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">4</span>]){ <span class="co"># @me_day (v. 1.4) (multiple me_events per sim)</span>
-                            Env_G[(day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>)<span class="op">:</span>(day <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)] &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">10</span>,<span class="dt">size=</span>Env_G[(day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>)<span class="op">:</span>(day <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)],<span class="dt">prob=</span><span class="kw">exp</span>(<span class="op">-</span>me_im)) <span class="co"># mollusciciding kills eggs for all previous 10 days </span>
-                            create_snails &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">1</span>, <span class="dt">size=</span>Env_G[day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>], <span class="dt">prob=</span><span class="fl">0.5</span>) <span class="co"># keep normal prob for me day  </span>
-                          }<span class="cf">else</span>{create_snails &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">1</span>, <span class="dt">size=</span>Env_G[day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>], <span class="dt">prob=</span><span class="fl">0.5</span>)}
-                        }<span class="cf">else</span>{create_snails &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">1</span>, <span class="dt">size=</span>Env_G[day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>], <span class="dt">prob=</span><span class="fl">0.5</span>)}
-                        <span class="kw">NLCommand</span>(<span class="st">&quot;create-snails &quot;</span>, create_snails, <span class="st">&quot;[set L 0.75 set ee 0.9 set D 0 set RH 0 set P 0 set RPP 0 set DAM 0 set HAZ 0 set LG 0.75]&quot;</span>)
-                      } <span class="co"># end create snails</span>
-                      
-                      <span class="kw">NLCommand</span>(<span class="st">&quot;go&quot;</span>) <span class="co"># run @netlogo sim steps</span>
-                      <span class="co">#cs[t] &lt;- rbinom(n=1, size=Env_G[day - 10], prob=0.5) # list to check 'create snails' output doesn't produce NAs</span>
-                      day =<span class="st"> </span>day <span class="op">+</span><span class="st"> </span><span class="dv">1</span> 
-                      Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function </span>
-                      <span class="co"># results outputs</span>
-                      cerc_list[t] &lt;-<span class="st"> </span>Env_Z <span class="co"># get cercariae density </span>
-                      food_list[t] &lt;-<span class="st"> </span>Env_F <span class="co"># get food growth</span>
-                      juv_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>RH<span class="op">==</span><span class="dv">0</span>)) <span class="co"># get juvenile hosts</span>
-                      adult_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>RH<span class="op">&gt;</span><span class="dv">0</span>)) <span class="co"># get adult hosts</span>
-                      infec_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>P<span class="op">&gt;</span><span class="dv">0</span>)) <span class="co"># get just infected hosts</span>
-                      infec_shed_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>RP<span class="op">&gt;</span><span class="dv">0</span>)) <span class="co"># get infected hosts that are shedding</span>
-                      <span class="co"># get length of infected hosts</span>
-                      ish &lt;-<span class="st"> </span><span class="kw">subset</span>(snail.stats,RP<span class="op">&gt;</span><span class="dv">0</span>) <span class="co"># get infected hosts</span>
-                      infec_shed_length_list[t] &lt;-<span class="st"> </span><span class="kw">mean</span>(ish<span class="op">$</span>L) <span class="co"># get their mean length</span>
-                      
-                      egg_list[t] &lt;-<span class="st"> </span>egg <span class="co"># save to host egg list </span>
-                      egg_mean_list[t] &lt;-<span class="st"> </span>eggs_mean <span class="co"># get mean eggs in env </span>
-                      
-                      
-                    } <span class="co"># --------------------------------------- end nl sim</span>
-                    
-                    <span class="co"># turn NULLs into NAs to get numeric values below (14-5-19. error: cannot coerce double)</span>
-                    hl_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(hl_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NULL&quot;</span>, <span class="ot">NA</span>, x))
-                    pmass_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(pmass_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NULL&quot;</span>, <span class="ot">NA</span>, x))
-                    egg_mean_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(egg_mean_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NaN&quot;</span>, <span class="ot">NA</span>, x))
-                    infec_shed_length_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(infec_shed_length_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NULL&quot;</span>, <span class="ot">NA</span>, x))
-                    
-                    <span class="co"># save individual outputs </span>
-                    cerc_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cerc_list) 
-                    food_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(food_list)
-                    juv_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(juv_list)
-                    adult_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(adult_list)
-                    infec_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(infec_list)
-                    infec_shed_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(infec_shed_list)
-                    hl_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(hl_list)
-                    pmass_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(pmass_list)
-                    host_biomass_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(host_biomass_list)
-                    egg_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(egg_list)
-                    egg_mean_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(egg_mean_list)
-                    infec_shed_length_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(infec_shed_length_list)
-                    
-                    <span class="co"># save master outputs </span>
-                    cerc_master[[<span class="kw">length</span>(cerc_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>cerc_list <span class="co"># cerc master list</span>
-                    food_master[[<span class="kw">length</span>(food_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>food_list <span class="co"># food master list</span>
-                    juv_master[[<span class="kw">length</span>(juv_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>juv_list <span class="co"># juv pop master list</span>
-                    adult_master[[<span class="kw">length</span>(adult_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>adult_list <span class="co"># adult pop master list</span>
-                    infec_master[[<span class="kw">length</span>(infec_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>infec_list <span class="co"># infected host pop master list</span>
-                    infec_shed_master[[<span class="kw">length</span>(infec_shed_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>infec_shed_list <span class="co"># infected shedding host pop master list</span>
-                    hl_master[[<span class="kw">length</span>(hl_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>hl_list <span class="co"># host length master</span>
-                    pmass_master[[<span class="kw">length</span>(pmass_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>pmass_list <span class="co"># parasite mass master</span>
-                    host_biomass_master[[<span class="kw">length</span>(host_biomass_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>host_biomass_list <span class="co"># host biomass master</span>
-                    egg_master[[<span class="kw">length</span>(egg_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>egg_list <span class="co"># summed egg master</span>
-                    egg_mean_master[[<span class="kw">length</span>(egg_mean_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>egg_mean_list <span class="co"># mean egg master</span>
-                    infec_shed_length_master[[<span class="kw">length</span>(infec_shed_length_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>infec_shed_length_list <span class="co"># mean infected shedding host length master</span>
-                    
-                    <span class="cf">if</span>(save_to_file<span class="op">==</span><span class="dv">1</span>){<span class="kw">dev.off</span>()}
-                  } <span class="co"># ----end me_im</span>
-                  } <span class="co"># --------------- end mes</span>
-                } <span class="co"># ------------------------------ end rgs</span>
-              } <span class="co"># --------------------------------------------- end rhos</span>
-            } <span class="co"># ----------------------------------------------------------- end alphas</span>
-          } <span class="co"># ------------------------------------------------------------------------- end detritus</span>
-        } <span class="co"># end hb pars # end sim model</span>
-        <span class="co"># ####################################  end netlogo sim ######################################## </span>
-        
-        <span class="co"># results output </span>
-        <span class="co"># save sim results to dir </span>
-        global_output &lt;-<span class="st"> </span><span class="kw">list</span>(cerc_master,food_master,juv_master, adult_master,infec_master,infec_shed_master,hl_master,pmass_master,host_biomass_master, egg_master, egg_mean_master,infec_shed_length_master) 
-        
-        <span class="co"># turn NaN and NA into 0s</span>
-        global_output &lt;-<span class="st"> </span><span class="kw">rapply</span>(global_output, <span class="dt">f=</span><span class="cf">function</span>(x) <span class="kw">ifelse</span>(<span class="kw">is.nan</span>(x),<span class="dv">0</span>,x), <span class="dt">how=</span><span class="st">&quot;replace&quot;</span> )
-        global_output &lt;-<span class="st"> </span><span class="kw">rapply</span>(global_output, <span class="dt">f=</span><span class="cf">function</span>(x) <span class="kw">ifelse</span>(<span class="kw">is.na</span>(x),<span class="dv">0</span>,x), <span class="dt">how=</span><span class="st">&quot;replace&quot;</span> )
-        
-        <span class="co"># global_output &lt;- cerc_master # save just cercs</span>
-        <span class="kw">saveRDS</span>(global_output,global_output_fh) <span class="co"># save to dir </span>
-        <span class="kw">cat</span>(<span class="st">&quot;Output saved in &quot;</span>, global_output_fh)
-        <span class="co"># read in saved sim results</span>
-        <span class="kw">cat</span>(<span class="st">&quot;order = cerc, food, juv, adult, infected, infected shedding, mean host length, mean parasite mass, summed host biomass&quot;</span>, <span class="st">&quot;mean host eggs&quot;</span>, <span class="st">&quot;infected host length&quot;</span>)
-        
-      <span class="co"># } # ---------------------- end me_pars sim runs @hailmary</span>
-    } <span class="co"># ---------------------- end me_event sim runs</span>
-  } <span class="co">#  --------------------- end me_im_event sims</span>
-} <span class="co">#  ---------------------- end rep_num loop</span>
+                            <span class="kw">NLCommand</span>(<span class="st">&quot;setup&quot;</span>)
+                            day &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># reset days </span>
+                            Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function </span>
+                            <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n.ticks){ <span class="co"># start nl sim  @netlogo</span>
+                              <span class="co"># define food dynamics for cyclical algal (logistic food growth equation) or detritus food sources</span>
+                              alpha &lt;-<span class="st"> </span>alpha <span class="co"># amplitude of resources</span>
+                              rho &lt;-<span class="st"> </span>rho  <span class="co"># periodicity (time range of resource cycles)  </span>
+                              rg &lt;-<span class="st"> </span>rg <span class="co"># resource growth rate </span>
+                              rg_t &lt;-<span class="st"> </span>rg <span class="op">+</span><span class="st"> </span>alpha <span class="op">*</span><span class="st"> </span>rg <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>t<span class="op">/</span>rho) <span class="co"># equilibrium cyclical resource dynamics (19-12-18)</span>
+                              pars[<span class="st">&quot;r&quot;</span>] &lt;-<span class="st"> </span>rg_t <span class="co"># set resource growth rate </span>
+                              pars[<span class="st">&quot;Det&quot;</span>] &lt;-<span class="st"> </span>detr <span class="co"># Units mg C/L-1 d-1 (detritus)</span>
+                              
+                              <span class="co"># @detr_impact -------------------------------------------------------------------</span>
+                              
+                              <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){ <span class="co"># detritus impact on select days</span>
+                                <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">2</span>]){ 
+                                  detr_<span class="dv">95</span> &lt;-<span class="st"> </span>detr <span class="op">*</span><span class="st"> </span>detr_im <span class="co"># reduce detr supply rate to 25%</span>
+                                  pars[<span class="st">&quot;Det&quot;</span>] &lt;-<span class="st"> </span>detr_<span class="dv">95</span> <span class="co"># set det to detr95</span>
+                                  detr &lt;-<span class="st"> </span>pars[<span class="st">&quot;Det&quot;</span>] <span class="co"># replace exisiting det for forthcoming days </span>
+                                }
+                              }
+                              <span class="co"># else{ # no detritus impact and rebound back to normal detr growth </span>
+                              <span class="co">#     pars[&quot;Det&quot;] &lt;- detr # Units mg C/L-1 d-1 (detritus)</span>
+                              <span class="co">#     }</span>
+                              
+                              <span class="co"># @snail_control (me events) -------------------------------------------------------------------</span>
+                              <span class="cf">if</span>(snail_control<span class="op">==</span><span class="dv">1</span>){
+                                <span class="co"># if(day==me){ # for me_pars loop (separate sims per me_event) @hailmary</span>
+                                <span class="co"># if(day %% me_day1==0){ # @me_day (v. 1.4) (multiple me_events per sim)</span>
+                                <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">4</span>]){ <span class="co"># @me_day (v. 1.4) (select multiple me_events per sim)</span>
+                                  hb &lt;-<span class="st"> </span>me_im
+                                  <span class="co"># cat(&quot;\n---------- DEAD SNAILS \ndays = &quot;, day,&quot;\nnumber of snails = &quot;, length(snail.stats$L))</span>
+                                }<span class="cf">else</span>{hb &lt;-<span class="st"> </span>hb_pars[<span class="dv">1</span>]} <span class="co"># hb on non-snail control days </span>
+                              }<span class="cf">else</span>{hb &lt;-<span class="st"> </span>hb_pars[<span class="dv">1</span>]} <span class="co"># hb when not using snail control </span>
+                              
+                              <span class="co"># set environment variables </span>
+                              Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function </span>
+                              environment =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">NLGetAgentSet</span>(<span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;Z&quot;</span>, <span class="st">&quot;G&quot;</span>), <span class="st">&quot;patches&quot;</span>)) <span class="co"># calc food, free miracidia, cercariae released, and eggs, per patch</span>
+                              
+                              <span class="co"># if there are hosts </span>
+                              <span class="cf">if</span>(<span class="kw">NLReport</span>(<span class="st">&quot;count snails&quot;</span>) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>){
+                                <span class="co"># set host variables</span>
+                                snail.stats =<span class="st"> </span><span class="kw">NLGetAgentSet</span>(<span class="kw">c</span>(<span class="st">&quot;who&quot;</span>, <span class="st">&quot;L&quot;</span>, <span class="st">&quot;ee&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;RH&quot;</span>, <span class="st">&quot;P&quot;</span>, <span class="st">&quot;RPP&quot;</span>, <span class="st">&quot;DAM&quot;</span>, <span class="st">&quot;HAZ&quot;</span>, <span class="st">&quot;LG&quot;</span>), <span class="st">&quot;snails&quot;</span>)
+                                N.snails =<span class="st"> </span><span class="kw">length</span>(snail.stats[,<span class="st">&quot;L&quot;</span>])
+                                
+                                <span class="co"># Infect snails</span>
+                                Infection.step =<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">Infection</span>(snail.stats, environment[<span class="dv">2</span>], pars)) <span class="co"># Who gets infected</span>
+                                snail.stats[<span class="kw">which</span>(Infection.step[<span class="dv">1</span><span class="op">:</span>N.snails] <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>),<span class="st">&quot;P&quot;</span>] =<span class="st"> </span>snail.stats[<span class="kw">which</span>(Infection.step[<span class="dv">1</span><span class="op">:</span>N.snails] <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>),<span class="st">&quot;P&quot;</span>] <span class="op">+</span><span class="st"> </span><span class="fl">2.85e-5</span> <span class="co"># add biomass of one miracidia</span>
+                                
+                                <span class="co"># @biocontrol -------------------------------------------------- </span>
+                                
+                                ### new hb vector 
+                                <span class="cf">if</span>(biocontrol <span class="op">==</span><span class="st"> </span><span class="dv">0</span>){
+                                  hb =<span class="st"> </span><span class="kw">rep</span>(pars[<span class="st">&quot;hb&quot;</span>], <span class="dt">times=</span>N.snails)
+                                }<span class="cf">else</span>{
+                                  <span class="cf">if</span>(snail_snack_window<span class="op">==</span><span class="dv">1</span>){
+                                    <span class="co"># predation = snail size cohorts</span>
+                                    hb =<span class="st"> </span><span class="kw">as.numeric</span>(pars[<span class="st">&quot;hb&quot;</span>]) <span class="op">+</span><span class="st"> </span>(pred_a <span class="op">*</span><span class="st"> </span>pred_p) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>pred_a <span class="op">*</span><span class="st"> </span>pred_h <span class="op">*</span><span class="st"> </span>N.snails) <span class="op">*</span><span class="st"> </span>(snail.stats<span class="op">$</span>L <span class="op">&gt;=</span><span class="st"> </span>snail_snack_min <span class="op">&amp;</span><span class="st"> </span>snail.stats<span class="op">$</span>L <span class="op">&lt;=</span><span class="st"> </span>snail_snack_max)
+                                  }<span class="cf">else</span>{
+                                    <span class="co"># predation = snail size dependent attack rate (L3, 3mm avg size)</span>
+                                    <span class="co"># 3 mm snail experiences the average attack rate for entire pop, higher = easier to escape predation  </span>
+                                    <span class="co"># hb = as.numeric(pars[&quot;hb&quot;]) + (pred_a * pred_p) / (1 + pred_a * pred_h * N.snails) * (3 * pars[&quot;LM&quot;]^2 / snail.stats$L^3)</span>
+                                    hb =<span class="st"> </span><span class="kw">as.numeric</span>(pars[<span class="st">&quot;hb&quot;</span>]) <span class="op">+</span><span class="st"> </span>(pred_a <span class="op">*</span><span class="st"> </span>pred_p) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>pred_a <span class="op">*</span><span class="st"> </span>pred_h <span class="op">*</span><span class="st"> </span>N.snails) <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>( <span class="op">-</span><span class="st"> </span><span class="fl">0.237</span> <span class="op">*</span><span class="st"> </span>snail.stats<span class="op">$</span>L)
+                                  }
+                                  <span class="co"># if(day==1){cat(&quot;min = &quot;,snail_snack_min,'\nmax = ',snail_snack_max)}</span>
+                                }
+                                
+                                
+                                <span class="co"># Update DEBS, HAZ=0 so survival probs are calculated for the current day</span>
+                                snail.update =<span class="st"> </span><span class="kw">t</span>(<span class="kw">mapply</span>(DEB, <span class="dt">L=</span>snail.stats[,<span class="dv">2</span>], <span class="dt">e=</span>snail.stats[,<span class="dv">3</span>], <span class="dt">D=</span>snail.stats[,<span class="dv">4</span>], <span class="dt">RH=</span>snail.stats[,<span class="dv">5</span>],
+                                                        <span class="dt">P=</span>snail.stats[,<span class="dv">6</span>], <span class="dt">RP=</span>snail.stats[,<span class="dv">7</span>], <span class="dt">DAM=</span>snail.stats[,<span class="dv">8</span>], <span class="dt">Lp=</span>snail.stats[,<span class="dv">10</span>],<span class="dt">hb=</span>hb,  <span class="co"># Food=environment[1]*(snail.stats[,2]^2)/sum(snail.stats[,2]^2), # update food availability per snail </span>
+                                                        <span class="dt">MoreArgs =</span> <span class="kw">list</span>(<span class="dt">step=</span><span class="dv">1</span>, <span class="dt">HAZ=</span><span class="dv">0</span>, <span class="dt">Food=</span>environment[<span class="dv">1</span>],<span class="co"># constant food available (23-1-19)</span>
+                                                                        <span class="dt">iM=</span>pars[<span class="st">&quot;iM&quot;</span>], <span class="dt">k=</span>pars[<span class="st">&quot;k&quot;</span>], <span class="dt">M=</span>pars[<span class="st">&quot;M&quot;</span>], <span class="dt">EM=</span>pars[<span class="st">&quot;EM&quot;</span>], <span class="dt">Fh=</span>pars[<span class="st">&quot;Fh&quot;</span>], 
+                                                                        <span class="dt">muD=</span>pars[<span class="st">&quot;muD&quot;</span>],
+                                                                        <span class="dt">DR=</span>pars[<span class="st">&quot;DR&quot;</span>], <span class="dt">yRP=</span>pars[<span class="st">&quot;yRP&quot;</span>], <span class="dt">ph=</span>pars[<span class="st">&quot;ph&quot;</span>], <span class="dt">yPE=</span>pars[<span class="st">&quot;yPE&quot;</span>], <span class="dt">iPM=</span>pars[<span class="st">&quot;iPM&quot;</span>], <span class="dt">eh=</span>pars[<span class="st">&quot;eh&quot;</span>],
+                                                                        <span class="dt">mP=</span>pars[<span class="st">&quot;mP&quot;</span>], <span class="dt">alpha=</span>pars[<span class="st">&quot;alpha&quot;</span>], <span class="dt">yEF=</span>pars[<span class="st">&quot;yEF&quot;</span>], <span class="dt">LM=</span>pars[<span class="st">&quot;LM&quot;</span>], <span class="dt">kd=</span>pars[<span class="st">&quot;kd&quot;</span>], <span class="dt">z=</span>pars[<span class="st">&quot;z&quot;</span>], 
+                                                                        <span class="dt">kk=</span>pars[<span class="st">&quot;kk&quot;</span>], 
+                                                                        <span class="co"># hb=hb,</span>
+                                                                        <span class="dt">theta=</span>pars[<span class="st">&quot;theta&quot;</span>], <span class="dt">mR=</span>pars[<span class="st">&quot;mR&quot;</span>], <span class="dt">yVE=</span>pars[<span class="st">&quot;yVE&quot;</span>], <span class="dt">SAtotal=</span> <span class="kw">sum</span>(snail.stats[,<span class="dv">2</span>]<span class="op">^</span><span class="dv">2</span>), 
+                                                                        <span class="dt">ENV=</span>pars[<span class="st">&quot;ENV&quot;</span>], <span class="dt">r=</span>pars[<span class="st">&quot;r&quot;</span>], <span class="dt">K=</span>pars[<span class="st">&quot;K&quot;</span>], 
+                                                                        <span class="dt">Det=</span>pars[<span class="st">&quot;Det&quot;</span>]))) <span class="co"># detritus (Det) defined in C file</span>
+                                
+                                snail.update[<span class="kw">is.nan</span>(snail.update)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn nans from matrix into 0</span>
+                                
+                                L =<span class="st"> </span>snail.update[,<span class="st">&quot;L&quot;</span>] <span class="co"># host structural length</span>
+                                e =<span class="st"> </span>snail.update[,<span class="st">&quot;e&quot;</span>] <span class="co"># host scaled reserve density    </span>
+                                D =<span class="st"> </span>snail.update[,<span class="st">&quot;D&quot;</span>] <span class="co"># host development </span>
+                                RH =<span class="st"> </span>snail.update[,<span class="st">&quot;RH&quot;</span>] <span class="co"># host energy to reproduction buffer  </span>
+                                DAM =<span class="st"> </span>snail.update[,<span class="st">&quot;DAM&quot;</span>] <span class="co"># host damage from starvation  </span>
+                                HAZ =<span class="st"> </span>snail.update[,<span class="st">&quot;HAZ&quot;</span>] <span class="co"># host hazard rate from starvation   </span>
+                                LG =<span class="st"> </span>snail.update[,<span class="st">&quot;LG&quot;</span>] <span class="co"># host shell length  </span>
+                                P =<span class="st"> </span>snail.update[,<span class="st">&quot;P&quot;</span>] <span class="co"># parasite mass (sum within host)</span>
+                                RP =<span class="st"> </span>snail.update[,<span class="st">&quot;RP&quot;</span>] <span class="co"># parasite reproductive buffer  </span>
+                                
+                                <span class="co"># ingestion = environment[1] - sum(snail.update[,&quot;Food&quot;]) # food intake by host from environment (for v.1.1)</span>
+                                chi &lt;-<span class="st"> </span>pars[<span class="st">&quot;M&quot;</span>]<span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;EM&quot;</span>]) <span class="co"># length to volume conversion factor for getting biomass</span>
+                                host_biomass &lt;-<span class="st"> </span><span class="kw">sum</span>(chi <span class="op">*</span><span class="st"> </span>L<span class="op">^</span><span class="dv">3</span>) <span class="co"># get total host biomass</span>
+                                
+                                Eggs =<span class="st"> </span><span class="kw">floor</span>(RH<span class="op">/</span><span class="fl">0.015</span>)  <span class="co"># Figure out how many (whole) eggs are released  </span>
+                                <span class="co"># if(day==me){Eggs &lt;- Eggs[1:round(0.1*length(Eggs))]} # kill off 90% of snail eggs in water with molluscicide event (v. 1.2)  </span>
+                                RH =<span class="st"> </span>RH <span class="op">%%</span><span class="st"> </span><span class="fl">0.015</span>        <span class="co"># Remove released cercariae from the buffer</span>
+                                Cercs =<span class="st"> </span><span class="kw">floor</span>(RP<span class="op">/</span><span class="fl">4e-5</span>)  <span class="co"># Figure out how many (whole) cercs are released</span>
+                                RP =<span class="st"> </span>RP <span class="op">%%</span><span class="st"> </span><span class="fl">4e-5</span>         <span class="co"># Remove released cercariae from buffer</span>
+                                Eggs =<span class="st"> </span><span class="kw">as.integer</span>(Eggs); Cercs =<span class="st"> </span><span class="kw">as.integer</span>(Cercs) 
+                                eggs_mean &lt;-<span class="st"> </span><span class="kw">mean</span>(Eggs[Eggs <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>]) <span class="co"># get mean eggs in env</span>
+                                eggs_mean &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(eggs_mean)
+                                
+                                <span class="co"># Update environment </span>
+                                Env_M =<span class="st"> </span><span class="kw">as.numeric</span>(Infection.step[N.snails <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;M_in&quot;</span>]) <span class="co"># total miracidia density </span>
+                                Env_Z =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">3</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;m_Z&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(Cercs)<span class="op">/</span>pars[<span class="st">&quot;ENV&quot;</span>]) <span class="co"># total cerc density</span>
+                                Env_G =<span class="st"> </span><span class="kw">as.integer</span>(Env_G) <span class="co"># set pop density outputs to integer to pass into Env_G and rbinom func</span>
+                                
+                                <span class="co"># @snail_control (me events) -------------------------------------------------------------------</span>
+                                <span class="co"># kill off 90% of snail eggs in water with molluscicide event </span>
+                                <span class="co"># ifelse(day==me,Env_G[day] &lt;- max(0, 0.1*sum(Eggs),na.rm=T),Env_G[day] &lt;- max(0, sum(Eggs),na.rm=T)) # for me_pars loop (separate sims per me_event) @hailmary</span>
+                                <span class="co"># ifelse(day %% me_day1==0,Env_G[day] &lt;- max(0, 0.1*sum(Eggs),na.rm=T),Env_G[day] &lt;- max(0, sum(Eggs),na.rm=T)) # @me_day (v. 1.4) (multiple me_events per sim)</span>
+                                <span class="kw">ifelse</span>(day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">4</span>],Env_G[day] &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="dv">0</span>, <span class="fl">0.1</span><span class="op">*</span><span class="kw">sum</span>(Eggs),<span class="dt">na.rm=</span>T),Env_G[day] &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="dv">0</span>, <span class="kw">sum</span>(Eggs),<span class="dt">na.rm=</span>T)) <span class="co"># @me_day (v. 1.4)</span>
+                                
+                                <span class="co"># Env_G[day] &lt;- max(0, sum(Eggs),na.rm=T)</span>
+                                egg &lt;-<span class="st"> </span><span class="kw">sum</span>(Eggs) <span class="co"># get summed host eggs </span>
+                                
+                                Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function  </span>
+                                <span class="co"># Env_F = max(0.001, as.numeric(pars[&quot;K&quot;]*environment[1]/(environment[1] + (pars[&quot;K&quot;] - environment[1])*exp(-pars[&quot;r&quot;]*pars[&quot;step&quot;])) - ingestion)) # Analytical soln to logistic - ingestion (alphas [1,100]) (original r growth equation)</span>
+                                <span class="co"># Env_F = max(0.001, as.numeric(pars[&quot;K&quot;]*environment[1]/(environment[1] + (pars[&quot;K&quot;] - environment[1])*exp(-rg_t*pars[&quot;step&quot;])) - ingestion)) # Analytical soln to logistic - ingestion with equilibrium resource growth wave (rg_t) (alphas [0,1]) (for v.1.1)     </span>
+                                <span class="co"># F = F * exp(- r + alpha * r * sin(2 * pi * t/rho) * s) * (1 - F/K) - f(i_{M} * sum(L^2) # v. 1.2 algae and detritus with cyclical algal growth</span>
+                                <span class="co"># r_t &lt;- pars[&quot;r&quot;] + alpha * pars[&quot;r&quot;] * sin(2 * pi * t/rho) # equilibrium resource dynamics (static)</span>
+                                Env_F =<span class="st"> </span><span class="kw">max</span>(<span class="fl">0.001</span>, snail.update[<span class="dv">1</span>,<span class="st">&quot;Food&quot;</span>]) <span class="co"># algal or detritus food sources (for v.1.2)</span>
+                                
+                                <span class="co"># @detr_impact -------------------------------------------------------------------</span>
+                                
+                                <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){ <span class="co"># detritus impact on select days </span>
+                                  <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">2</span>]){
+                                    Env_F_<span class="dv">95</span> =<span class="st"> </span><span class="kw">max</span>(<span class="fl">0.001</span>, snail.update[<span class="dv">1</span>,<span class="st">&quot;Food&quot;</span>] <span class="op">*</span><span class="st"> </span>detr_im) <span class="co"># reduce detritusto 25% (v.1.4)</span>
+                                    Env_F =<span class="st"> </span>Env_F_<span class="dv">95</span>
+                                  }
+                                }
+                                <span class="co"># else{ # no detritus impact (normal conditions)</span>
+                                <span class="co">#   Env_F = max(0.001, snail.update[1,&quot;Food&quot;]) # algal or detritus food sources (for v.1.2)</span>
+                                <span class="co">#   }</span>
+                                
+                                <span class="co"># Command back to NL @netlogo</span>
+                                snail.commands =<span class="st"> </span><span class="kw">paste</span>(<span class="kw">mapply</span>(update.snails, <span class="dt">who=</span>snail.stats[,<span class="st">&quot;who&quot;</span>], <span class="dt">new.L=</span>L, <span class="dt">new.e=</span>e, <span class="dt">new.D=</span>D, <span class="dt">new.RH=</span>RH, <span class="dt">new.P=</span>P, <span class="dt">new.RP=</span>RP, <span class="dt">new.DAM=</span>DAM, <span class="dt">new.HAZ=</span>HAZ, <span class="dt">new.LG=</span>LG), <span class="dt">collapse=</span><span class="st">&quot; &quot;</span>)
+                                <span class="kw">NLCommand</span>(snail.commands) 
+                                
+                                hl_list[t] &lt;-<span class="st"> </span><span class="kw">mean</span>(L) <span class="co"># get average host lengths per model step </span>
+                                pmass_list[t] &lt;-<span class="st"> </span><span class="kw">sum</span>(P) <span class="co"># get total parasite mass per model step</span>
+                                host_biomass_list &lt;-<span class="st"> </span>host_biomass <span class="co"># get host mass </span>
+                                egg_mean_list[t] &lt;-<span class="st"> </span>eggs_mean <span class="co"># get mean eggs in env</span>
+                                
+                              }<span class="cf">else</span>{ <span class="co"># ------------------------------------ if there are no hosts  </span>
+                                
+                                Env_M =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;m_M&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>]) <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;M_in&quot;</span>]) <span class="co"># total miracidia density </span>
+                                Env_Z =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">3</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;m_Z&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>])) <span class="co"># total cerc density</span>
+                                Env_G =<span class="st"> </span><span class="kw">as.integer</span>(Env_G) <span class="co"># set pop density outputs to integer to pass into Env_G and rbinom func</span>
+                                Env_G[day] &lt;-<span class="st"> </span><span class="dv">0</span>
+                                Env_F =<span class="st"> </span><span class="kw">ifelse</span>(pars[<span class="st">&quot;Det&quot;</span>] <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="kw">as.numeric</span>(pars[<span class="st">&quot;K&quot;</span>]<span class="op">*</span>environment[<span class="dv">1</span>]<span class="op">/</span>(environment[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>(pars[<span class="st">&quot;K&quot;</span>] <span class="op">-</span><span class="st"> </span>environment[<span class="dv">1</span>])<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>pars[<span class="st">&quot;r&quot;</span>]<span class="op">*</span>pars[<span class="st">&quot;step&quot;</span>]))), <span class="kw">as.numeric</span>(environment[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;Det&quot;</span>]))
+                                
+                                <span class="co"># @detr_impact -------------------------------------------------------------------</span>
+                                
+                                <span class="cf">if</span>(detr_impact<span class="op">==</span><span class="dv">1</span>){ <span class="co"># detritus impact on select days </span>
+                                  <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>detr_impact_days[<span class="dv">2</span>]){
+                                    Env_F =<span class="st"> </span><span class="kw">as.numeric</span>(environment[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>pars[<span class="st">&quot;Det&quot;</span>]) <span class="op">*</span><span class="st"> </span>detr_im
+                                  }
+                                }
+                                <span class="co"># else{ # no detritus impact (normal conditions)</span>
+                                <span class="co">#     Env_F = ifelse(pars[&quot;Det&quot;] == 0, as.numeric(pars[&quot;K&quot;]*environment[1]/(environment[1] + (pars[&quot;K&quot;] - environment[1])*exp(-pars[&quot;r&quot;]*pars[&quot;step&quot;]))), as.numeric(environment[1] + pars[&quot;Det&quot;]))</span>
+                                <span class="co">#   }</span>
+                                
+                                egg &lt;-<span class="st"> </span><span class="dv">0</span>
+                              } <span class="co"># end no hosts</span>
+                              
+                              <span class="co"># update patch variables </span>
+                              <span class="kw">NLCommand</span>(<span class="st">&quot;ask patch 0 0 [set F&quot;</span>, Env_F, <span class="st">&quot;set M&quot;</span>, Env_M, <span class="st">&quot;set Z&quot;</span>, Env_Z, <span class="st">&quot;set G&quot;</span>, Env_G[day], <span class="st">&quot;]&quot;</span>)
+                              
+                              <span class="co"># @snail_control -------------------------------------------------------------------</span>
+                              <span class="co"># kill snail eggs with molluscicide event  </span>
+                              <span class="cf">if</span>(day <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>){
+                                <span class="cf">if</span>(snail_control<span class="op">==</span><span class="dv">1</span>){ 
+                                  <span class="co"># if(day==me){ # for me_pars loop (separate sims per me_event) @hailmary</span>
+                                  <span class="co"># if(day %% me_day1==0){ # @me_day (v. 1.4) (multiple me_events per sim)</span>
+                                  <span class="cf">if</span>(day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">1</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">2</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">3</span>] <span class="op">|</span><span class="st"> </span>day <span class="op">==</span><span class="st"> </span>me_days[<span class="dv">4</span>]){ <span class="co"># @me_day (v. 1.4) (multiple me_events per sim)</span>
+                                    Env_G[(day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>)<span class="op">:</span>(day <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)] &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">10</span>,<span class="dt">size=</span>Env_G[(day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>)<span class="op">:</span>(day <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)],<span class="dt">prob=</span><span class="kw">exp</span>(<span class="op">-</span>me_im)) <span class="co"># mollusciciding kills eggs for all previous 10 days </span>
+                                    create_snails &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">1</span>, <span class="dt">size=</span>Env_G[day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>], <span class="dt">prob=</span><span class="fl">0.5</span>) <span class="co"># keep normal prob for me day  </span>
+                                  }<span class="cf">else</span>{create_snails &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">1</span>, <span class="dt">size=</span>Env_G[day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>], <span class="dt">prob=</span><span class="fl">0.5</span>)}
+                                }<span class="cf">else</span>{create_snails &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dt">n=</span><span class="dv">1</span>, <span class="dt">size=</span>Env_G[day <span class="op">-</span><span class="st"> </span><span class="dv">10</span>], <span class="dt">prob=</span><span class="fl">0.5</span>)}
+                                <span class="kw">NLCommand</span>(<span class="st">&quot;create-snails &quot;</span>, create_snails, <span class="st">&quot;[set L 0.75 set ee 0.9 set D 0 set RH 0 set P 0 set RPP 0 set DAM 0 set HAZ 0 set LG 0.75]&quot;</span>)
+                              } <span class="co"># end create snails</span>
+                              
+                              <span class="kw">NLCommand</span>(<span class="st">&quot;go&quot;</span>) <span class="co"># run @netlogo sim steps</span>
+                              <span class="co">#cs[t] &lt;- rbinom(n=1, size=Env_G[day - 10], prob=0.5) # list to check 'create snails' output doesn't produce NAs</span>
+                              day =<span class="st"> </span>day <span class="op">+</span><span class="st"> </span><span class="dv">1</span> 
+                              Env_G[<span class="kw">is.na</span>(Env_G)] &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co"># turn NAs to 0 to feed into rbinom function </span>
+                              <span class="co"># results outputs</span>
+                              cerc_list[t] &lt;-<span class="st"> </span>Env_Z <span class="co"># get cercariae density </span>
+                              food_list[t] &lt;-<span class="st"> </span>Env_F <span class="co"># get food growth</span>
+                              juv_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>RH<span class="op">==</span><span class="dv">0</span>)) <span class="co"># get juvenile hosts</span>
+                              adult_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>RH<span class="op">&gt;</span><span class="dv">0</span>)) <span class="co"># get adult hosts</span>
+                              infec_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>P<span class="op">&gt;</span><span class="dv">0</span>)) <span class="co"># get just infected hosts</span>
+                              infec_shed_list[t] &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">which</span>(snail.stats<span class="op">$</span>RP<span class="op">&gt;</span><span class="dv">0</span>)) <span class="co"># get infected hosts that are shedding</span>
+                              <span class="co"># get length of infected hosts</span>
+                              ish &lt;-<span class="st"> </span><span class="kw">subset</span>(snail.stats,RP<span class="op">&gt;</span><span class="dv">0</span>) <span class="co"># get infected hosts</span>
+                              infec_shed_length_list[t] &lt;-<span class="st"> </span><span class="kw">mean</span>(ish<span class="op">$</span>L) <span class="co"># get their mean length</span>
+                              
+                              egg_list[t] &lt;-<span class="st"> </span>egg <span class="co"># save to host egg list </span>
+                              egg_mean_list[t] &lt;-<span class="st"> </span>eggs_mean <span class="co"># get mean eggs in env </span>
+                              
+                              
+                            } <span class="co"># --------------------------------------- end nl sim</span>
+                            
+                            <span class="co"># turn NULLs into NAs to get numeric values below (14-5-19. error: cannot coerce double)</span>
+                            hl_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(hl_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NULL&quot;</span>, <span class="ot">NA</span>, x))
+                            pmass_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(pmass_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NULL&quot;</span>, <span class="ot">NA</span>, x))
+                            egg_mean_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(egg_mean_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NaN&quot;</span>, <span class="ot">NA</span>, x))
+                            infec_shed_length_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(infec_shed_length_list, <span class="cf">function</span>(x) <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> &quot;NULL&quot;</span>, <span class="ot">NA</span>, x))
+                            
+                            <span class="co"># save individual outputs </span>
+                            cerc_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cerc_list) 
+                            food_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(food_list)
+                            juv_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(juv_list)
+                            adult_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(adult_list)
+                            infec_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(infec_list)
+                            infec_shed_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(infec_shed_list)
+                            hl_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(hl_list)
+                            pmass_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(pmass_list)
+                            host_biomass_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(host_biomass_list)
+                            egg_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(egg_list)
+                            egg_mean_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(egg_mean_list)
+                            infec_shed_length_list &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(infec_shed_length_list)
+                            
+                            <span class="co"># save master outputs </span>
+                            cerc_master[[<span class="kw">length</span>(cerc_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>cerc_list <span class="co"># cerc master list</span>
+                            food_master[[<span class="kw">length</span>(food_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>food_list <span class="co"># food master list</span>
+                            juv_master[[<span class="kw">length</span>(juv_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>juv_list <span class="co"># juv pop master list</span>
+                            adult_master[[<span class="kw">length</span>(adult_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>adult_list <span class="co"># adult pop master list</span>
+                            infec_master[[<span class="kw">length</span>(infec_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>infec_list <span class="co"># infected host pop master list</span>
+                            infec_shed_master[[<span class="kw">length</span>(infec_shed_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>infec_shed_list <span class="co"># infected shedding host pop master list</span>
+                            hl_master[[<span class="kw">length</span>(hl_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>hl_list <span class="co"># host length master</span>
+                            pmass_master[[<span class="kw">length</span>(pmass_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>pmass_list <span class="co"># parasite mass master</span>
+                            host_biomass_master[[<span class="kw">length</span>(host_biomass_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>host_biomass_list <span class="co"># host biomass master</span>
+                            egg_master[[<span class="kw">length</span>(egg_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>egg_list <span class="co"># summed egg master</span>
+                            egg_mean_master[[<span class="kw">length</span>(egg_mean_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>egg_mean_list <span class="co"># mean egg master</span>
+                            infec_shed_length_master[[<span class="kw">length</span>(infec_shed_length_master)<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span>infec_shed_length_list <span class="co"># mean infected shedding host length master</span>
+                            
+                            <span class="co"># day_master[[length(day_master)+1]] &lt;- day_list</span>
+                            <span class="cf">if</span>(save_to_file<span class="op">==</span><span class="dv">1</span>){<span class="kw">dev.off</span>()}
+                          } <span class="co"># ----end me_im</span>
+                        } <span class="co"># --------------- end mes</span>
+                      } <span class="co"># ------------------------------ end rgs</span>
+                    } <span class="co"># --------------------------------------------- end rhos</span>
+                  } <span class="co"># ----------------------------------------------------------- end alphas</span>
+                } <span class="co"># ------------------------------------------------------------------------- end detritus</span>
+              } <span class="co"># end hb pars # end sim model</span>
+              <span class="co"># ####################################  end netlogo sim ######################################## </span>
+              
+              <span class="co"># results output </span>
+              <span class="co"># save sim results to dir </span>
+              global_output &lt;-<span class="st"> </span><span class="kw">list</span>(cerc_master,food_master,juv_master, adult_master,infec_master,infec_shed_master,hl_master,pmass_master,host_biomass_master, egg_master, egg_mean_master,infec_shed_length_master) 
+              
+              <span class="co"># fill in shorter vecs with 0s to match length</span>
+              fillvec =<span class="st"> </span><span class="cf">function</span>(x){
+                nv =<span class="st"> </span><span class="kw">lapply</span>(x,<span class="st">`</span><span class="dt">length&lt;-</span><span class="st">`</span>, n.ticks) <span class="co"># fill remaining vec with NAs to match total length</span>
+              }
+              global_output =<span class="st"> </span><span class="kw">lapply</span>(global_output,fillvec) <span class="co"># apply fillvec to list</span>
+              
+              <span class="co"># turn NaN and NA into 0s</span>
+              global_output &lt;-<span class="st"> </span><span class="kw">rapply</span>(global_output, <span class="dt">f=</span><span class="cf">function</span>(x) <span class="kw">ifelse</span>(<span class="kw">is.nan</span>(x),<span class="dv">0</span>,x), <span class="dt">how=</span><span class="st">&quot;replace&quot;</span> )
+              global_output &lt;-<span class="st"> </span><span class="kw">rapply</span>(global_output, <span class="dt">f=</span><span class="cf">function</span>(x) <span class="kw">ifelse</span>(<span class="kw">is.na</span>(x),<span class="dv">0</span>,x), <span class="dt">how=</span><span class="st">&quot;replace&quot;</span> )
+              
+              <span class="co"># global_output &lt;- cerc_master # save just cercs</span>
+              <span class="kw">saveRDS</span>(global_output,global_output_fh) <span class="co"># save to dir </span>
+              <span class="kw">cat</span>(<span class="st">&quot;Output saved in &quot;</span>, global_output_fh)
+              <span class="co"># read in saved sim results</span>
+              <span class="kw">cat</span>(<span class="st">&quot;order = cerc, food, juv, adult, infected, infected shedding, mean host length, mean parasite mass, summed host biomass&quot;</span>, <span class="st">&quot;mean host eggs&quot;</span>, <span class="st">&quot;infected host length&quot;</span>)
+              
+              <span class="co"># } # ---------------------- end me_pars sim runs @hailmary</span>
+            } <span class="co"># ---------------------- end me_event sim runs</span>
+          } <span class="co">#  --------------------- end me_im_event sims</span>
+          <span class="co"># } #  ---------------------- end detr_im sim runs</span>
+        } <span class="co">#  ---------------------- end rep_num loop</span>
+        <span class="co"># } #  --------------------- end detr impact days loop</span>
+      }  <span class="co"># ---------------------- end init_host_pop sim runs</span>
+    } <span class="co"># end pred_p loop</span>
+  <span class="co"># } # snail_snack_min</span>
+<span class="co"># } # snail_snack_max</span>
+<span class="co"># } # rg/det productivity == 1</span>
 
 
 <span class="co"># ------------------------- plot individual outputs -------------------------</span>
 mm_ =<span class="st"> </span><span class="kw">readRDS</span>(global_output_fh)
-mains &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;cercs&quot;</span>,<span class="st">&quot;food&quot;</span>,<span class="st">&quot;juv&quot;</span>,<span class="st">&quot;adult&quot;</span>,<span class="st">&quot;&quot;</span>,<span class="st">&quot;infec (shed)&quot;</span>,<span class="kw">rep</span>(<span class="st">&quot;&quot;</span>,<span class="dv">3</span>),<span class="st">&quot;sum host eggs&quot;</span>,<span class="st">&quot;mean host eggs&quot;</span>,<span class="st">&quot;infec host length&quot;</span>)
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>),<span class="dt">las=</span><span class="dv">1</span>,<span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">10</span>,<span class="dv">11</span>,<span class="dv">12</span>)){
-  <span class="kw">plot</span>(mm_[[i]][[<span class="dv">1</span>]],<span class="dt">type=</span><span class="st">&quot;l&quot;</span>,<span class="dt">main=</span>mains[i]) 
-}
+<span class="kw">layout</span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">16</span>),<span class="dv">4</span>,<span class="dv">4</span>,<span class="dt">byrow=</span>T))
+<span class="kw">require</span>(pacman)
+<span class="kw">p_load</span>(plotly)
+<span class="co"># plot master</span>
+mm &lt;-<span class="st"> </span>mm_[[<span class="dv">1</span>]] <span class="co"># 1=cercs, 2=food</span>
+y_m &lt;-<span class="st"> </span><span class="kw">melt</span>(mm)
+p =<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> y_m, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">rep.int</span>(<span class="dv">1</span><span class="op">:</span>n.ticks,<span class="kw">max</span>(L1)) , <span class="dt">y =</span> value, <span class="dt">group =</span> L1, <span class="dt">colour=</span><span class="kw">factor</span>(L1)), ) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> y_m, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">rep.int</span>(<span class="dv">1</span><span class="op">:</span>n.ticks,<span class="kw">max</span>(L1)) , <span class="dt">y =</span> value, <span class="dt">group =</span> L1, <span class="dt">colour=</span><span class="kw">factor</span>(L1)), ) <span class="op">+</span>
+<span class="st">  </span><span class="co">#linetype=y_m$L1) +     </span>
+<span class="st">  </span><span class="kw">theme_tufte</span>()
+<span class="kw">ggplotly</span>(p)
+
 
 <span class="co"># NLQuit()</span></code></pre></div>
 <p>End Appendix</p>
