@@ -330,9 +330,6 @@ c(seq(0,1.5,0.1),2) / 50 * 500 # fig 1&2
 c(seq(0,1.5,0.1),2,2.5,3) / 50 * 500 # fig 3
 # continuous host mortality with varying resource productivity   
 c(0,0.5,1,1.5,2,5,10,15,20,30,50) 
-
-# additional params for fig 4  
-c(0.05, 0.15, 5) / 50 * 500
  
 # per L
 pred_ps / 50 
